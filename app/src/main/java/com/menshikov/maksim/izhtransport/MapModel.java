@@ -16,13 +16,10 @@ public class MapModel
 {
     private final int screenWidth;
     private final int screenHeight;
-    private Resources resources;
+    private IMapSource mapSource;
 
     private int mapWidth;
     private int mapHeight;
-
-    private float kx;
-    private float ky;
 
     private int currentLeft = 0;
     private int currentTop = 0;
@@ -32,55 +29,72 @@ public class MapModel
     private Bitmap generalMap;
     private BitmapRegionDecoder decoder;
 
-    public MapModel(int _screenWidth, int _screenHeight, Resources resources)
+    public int getMapHeight()
+    {
+        return mapHeight;
+    }
+
+    public int getMapWidth()
+    {
+        return mapWidth;
+    }
+
+    public int getCurrentWidth()
+    {
+        return currentWidth;
+    }
+
+    public int getCurrentHeight()
+    {
+        return currentHeight;
+    }
+
+    public void setCurrentLeft(int left)
+    {
+        currentLeft = left;
+    }
+
+    public void setCurrentTop(int top)
+    {
+        currentTop = top;
+    }
+
+    public int getCurrentTop()
+    {
+        return currentTop;
+    }
+
+    public int getCurrentLeft()
+    {
+        return currentLeft;
+    }
+
+    public MapModel(int _screenWidth, int _screenHeight, IMapSource mapSource)
     {
         screenWidth = _screenWidth;
         screenHeight = _screenHeight;
-        this.resources = resources;
-
-        generateGeneralMap();
-        generateDecoder();
-
+        this.mapSource = mapSource;
         currentHeight = screenHeight;
         currentWidth = screenWidth;
 
+        mapHeight = mapSource.getHeight();
+        mapWidth = mapSource.getWidth();
     }
 
-    public Bitmap getMap()
+    public Bitmap getMap(boolean isBad)
     {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 1;
-        Bitmap bitmap = decoder.decodeRegion(new Rect(currentLeft, currentTop, currentLeft + currentWidth, currentTop + currentHeight), options);
-        return Bitmap.createScaledBitmap(bitmap,screenWidth,screenHeight,false);
-    }
-
-    private void generateDecoder()
-    {
-        try
+        if (isBad)
         {
-            InputStream is = resources.openRawResource(+R.drawable.map);
-            decoder = BitmapRegionDecoder.newInstance(is, false);
+            return mapSource.getBadMap(new Rect(currentLeft,currentTop,currentLeft+currentWidth,currentTop+currentHeight),screenWidth,screenHeight);
         }
-        catch (IOException e)
+        else
         {
-            e.printStackTrace();
+            return mapSource.getMap(new Rect(currentLeft,currentTop,currentLeft+currentWidth,currentTop+currentHeight),screenWidth,screenHeight);
         }
     }
 
-    private void generateGeneralMap() {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(resources, R.drawable.map,options);
 
-        mapHeight = options.outHeight;
-        mapWidth = options.outWidth;
 
-        options.inJustDecodeBounds = false;
-        options.inSampleSize = 6;
-        generalMap = BitmapFactory.decodeResource(resources, R.drawable.map,options);
 
-        kx = generalMap.getWidth() / mapWidth;
-        ky = generalMap.getHeight() / mapHeight;
-    }
 
 }

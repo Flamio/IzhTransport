@@ -21,7 +21,7 @@ public class MainActivity extends Activity {
         int height = displaymetrics.heightPixels;
         int width = displaymetrics.widthPixels;
 
-        MapPresenter mapPresenter = new MapPresenter(new MapModel(width, height,getResources()), mapView);
+        MapPresenter mapPresenter = new MapPresenter(new MapModel(width, height,new ResourceMapSource(getResources())), mapView);
 
         setContentView(mapView);
     }

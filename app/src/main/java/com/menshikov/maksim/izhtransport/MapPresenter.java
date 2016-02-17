@@ -17,13 +17,27 @@ public class MapPresenter
             @Override
             public void onMoving(int dx, int dy)
             {
+                model.setCurrentLeft(model.getCurrentLeft()+dx<0?0:model.getCurrentLeft()+dx);
+                model.setCurrentTop(model.getCurrentTop()+dy<0?0:model.getCurrentTop()+dy);
 
+                if (model.getCurrentLeft()+model.getCurrentWidth()>model.getMapWidth())
+                {
+                    model.setCurrentLeft(model.getMapWidth()-model.getCurrentWidth());
+                }
+
+                if (model.getCurrentTop()+model.getCurrentHeight()>model.getMapHeight())
+                {
+                    model.setCurrentTop(model.getMapHeight()-model.getCurrentHeight());
+                }
+
+
+                view.setBitmap(model.getMap(true));
             }
 
             @Override
             public void onStopMoving()
             {
-
+                view.setBitmap(model.getMap(false));
             }
 
             @Override
@@ -32,7 +46,7 @@ public class MapPresenter
 
             }
         });
-        view.setBitmap(model.getMap());
+        view.setBitmap(model.getMap(false));
     }
 
 }

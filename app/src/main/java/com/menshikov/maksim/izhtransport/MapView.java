@@ -20,9 +20,10 @@ import java.io.InputStream;
  */
 public class MapView extends View implements View.OnTouchListener, IMapView
 {
-
     private Bitmap bitmap;
     private IMapMoveListener mapMoveListener;
+    private float beginX;
+    private float beginY;
 
     public MapView(Context context)
     {
@@ -45,15 +46,27 @@ public class MapView extends View implements View.OnTouchListener, IMapView
         int touches = event.getPointerCount();
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: // нажатие
+                beginX = event.getX();
+                beginY = event.getY();
+
+
 
                 break;
             case MotionEvent.ACTION_MOVE: // движение
 
+                int rx = (int)(beginX - event.getX());
+                int ry = (int)(beginY -event.getY());
+                mapMoveListener.onMoving(rx,ry);
+
+                beginX = event.getX();
+                beginY = event.getY();
+
                 break;
             case MotionEvent.ACTION_UP: // отпускание
-
+                mapMoveListener.onStopMoving();
                break;
             case MotionEvent.ACTION_CANCEL:
+
                 break;
         }
         return true;
