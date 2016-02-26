@@ -7,5 +7,5 @@ public interface IMapMoveListener
 {
     void onMoving(int dx,int dy);
     void onStopMoving();
-    void onScaling(boolean increase);
+    void onScaling(boolean increase, int centerX,int centerY);
 }

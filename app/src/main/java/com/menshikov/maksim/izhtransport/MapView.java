@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -24,6 +25,7 @@ public class MapView extends View implements View.OnTouchListener, IMapView
     private IMapMoveListener mapMoveListener;
     private float beginX;
     private float beginY;
+    private float beginGestureLine;
 
     public MapView(Context context)
     {
@@ -45,14 +47,39 @@ public class MapView extends View implements View.OnTouchListener, IMapView
     {
         int touches = event.getPointerCount();
         switch (event.getActionMasked()) {
+
+            case MotionEvent.ACTION_POINTER_DOWN: // последующие касания
+                if (touches ==2)
+                {
+                    beginGestureLine = (float)Math.sqrt( Math.pow(event.getX(1)-event.getX(0),2.0)+Math.pow(event.getY(1)-event.getY(0),2.0));
+                    Log.d("2touch",Float.toString(beginGestureLine) + "begin");
+                }
+                break;
+
             case MotionEvent.ACTION_DOWN: // нажатие
                 beginX = event.getX();
                 beginY = event.getY();
 
-
-
                 break;
             case MotionEvent.ACTION_MOVE: // движение
+
+                if (touches ==2)
+                {
+                    float tempGestureLine = (float)Math.sqrt( Math.pow(event.getX(1)-event.getX(0),2.0)+Math.pow(event.getY(1)-event.getY(0),2.0));
+                    int centerX =(int)Math.round(event.getX(1)+event.getX(0)/(float)2);
+                    int centerY =(int)Math.round(event.getY(1)+event.getY(0)/(float)2);
+
+                    Log.d("2touch",Float.toString(tempGestureLine));
+                    if(tempGestureLine > beginGestureLine)
+                    {
+                        mapMoveListener.onScaling(true,centerX,centerY);
+                    }
+                    else if (tempGestureLine < beginGestureLine)
+                    {
+                        mapMoveListener.onScaling(false,centerX,centerY);
+                    }
+                    break;
+                }
 
                 int rx = (int)(beginX - event.getX());
                 int ry = (int)(beginY -event.getY());

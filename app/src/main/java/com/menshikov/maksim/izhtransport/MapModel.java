@@ -51,12 +51,20 @@ public class MapModel
 
     public void setCurrentLeft(int left)
     {
-        currentLeft = left;
+        currentLeft = left<0 ? 0:  left + currentWidth>mapWidth?mapWidth- currentWidth:left;
     }
 
     public void setCurrentTop(int top)
     {
-        currentTop = top;
+        currentTop = top<0 ? 0:  top + currentHeight>mapHeight?mapHeight -  currentHeight:top;
+    }
+    public void setCurrentWidth(int width)
+    {
+        currentWidth = width<10 ?10 :  width>mapWidth?mapWidth:width;
+    }
+    public void setCurrentHeight(int height)
+    {
+        currentHeight = height<10 ?10 :  height>mapHeight?mapHeight:height;
     }
 
     public int getCurrentTop()
@@ -68,6 +76,21 @@ public class MapModel
     {
         return currentLeft;
     }
+
+//    public float getAspectRatioScreen()
+//    {
+//        return (float)screenHeight/(float)screenWidth;
+//    }
+//
+//    public float getCurrentKoeffY()
+//    {
+//        return (float)currentHeight/(float)screenHeight;
+//    }
+//
+//    public float getCurrentKoeffX()
+//    {
+//        return (float)currentWidth/(float)screenWidth;
+//    }
 
     public MapModel(int _screenWidth, int _screenHeight, IMapSource mapSource)
     {
