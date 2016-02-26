@@ -41,7 +41,10 @@ public class ResourceMapSource implements IMapSource
         mapWidth = options.outWidth;
 
         options.inJustDecodeBounds = false;
-        options.inSampleSize = 15;
+        options.inPreferQualityOverSpeed = false;
+        options.inSampleSize = 5;
+        options.inPreferQualityOverSpeed = false;
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
         generalMap = BitmapFactory.decodeResource(resources, R.drawable.map,options);
         int width = generalMap.getWidth();
         int height = generalMap.getHeight();
@@ -80,6 +83,8 @@ public class ResourceMapSource implements IMapSource
     {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 1;
+        options.inPreferQualityOverSpeed = false;
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
         bitmap = decoder.decodeRegion(rect, options);
         return Bitmap.createScaledBitmap(bitmap,screenWidth,screenHeight,false);
     }
