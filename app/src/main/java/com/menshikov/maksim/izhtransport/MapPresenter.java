@@ -47,7 +47,7 @@ public class MapPresenter
             {
 
                 int newLeftOffset =model.getCurrentWidth()/100;
-                int newTopOffset = newLeftOffset;
+                int newTopOffset = model.getCurrentHeight()/100;
 
                 int sign = 0;
                 if (increase)
@@ -59,7 +59,7 @@ public class MapPresenter
                     sign = -1;
                 }
                     int newWidth = model.getCurrentWidth() - sign* newLeftOffset;
-                    int newHeight = ((newWidth*model.getCurrentHeight())/model.getCurrentWidth());
+                    int newHeight = model.getCurrentHeight() - sign* newTopOffset;//((newWidth*model.getCurrentHeight())/model.getCurrentWidth());
                     model.setCurrentHeight(newHeight);
                     model.setCurrentWidth(newWidth);
                     model.setCurrentLeft(model.getCurrentLeft() + sign*newLeftOffset );

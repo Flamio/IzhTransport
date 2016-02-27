@@ -21,8 +21,8 @@ public class MapModel
     private int mapWidth;
     private int mapHeight;
 
-    private int currentLeft = 0;
-    private int currentTop = 0;
+    private int currentLeft = 300;
+    private int currentTop = 300;
     private int currentWidth;
     private int currentHeight;
 
@@ -115,9 +115,4 @@ public class MapModel
             return mapSource.getMap(new Rect(currentLeft,currentTop,currentLeft+currentWidth,currentTop+currentHeight),screenWidth,screenHeight);
         }
     }
-
-
-
-
-
 }
