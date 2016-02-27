@@ -3,6 +3,10 @@ package com.menshikov.maksim.izhtransport;
 import android.app.Application;
 import android.test.ApplicationTestCase;
 
+
+import dalvik.annotation.TestTarget;
+
+
 /**
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
  */
@@ -13,17 +17,11 @@ public class ApplicationTest extends ApplicationTestCase<Application>
         super(Application.class);
     }
 
-    @Override
-    protected void setUp() throws Exception
+
+
+    public void Test1()
     {
-        super.setUp();
+        assertEquals(1,5);
     }
-
-    public void testInfoFromSourceToView()
-    {
-
-        assertEquals(1,8);
-    }
-
 
 }
