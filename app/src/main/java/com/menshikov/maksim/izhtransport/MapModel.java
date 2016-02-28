@@ -4,10 +4,13 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
+import android.graphics.Point;
 import android.graphics.Rect;
+import android.location.Location;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 /**
  * Created by Maksim on 17.02.2016.
@@ -25,6 +28,12 @@ public class MapModel
     private int currentTop = 300;
     private int currentWidth;
     private int currentHeight;
+
+    private float LocationToMapKoeffX;
+    private float LocationToMapKoeffY;
+
+    private Location leftTopMapLocation;
+    private Location rightBottomLocation;
 
     private Bitmap generalMap;
     private BitmapRegionDecoder decoder;
@@ -102,6 +111,30 @@ public class MapModel
 
         mapHeight = mapSource.getHeight();
         mapWidth = mapSource.getWidth();
+
+        leftTopMapLocation = new Location("izh");
+        rightBottomLocation = new Location("izh");
+
+        leftTopMapLocation.setLatitude(56.990728);
+        leftTopMapLocation.setLongitude(52.915183);
+        rightBottomLocation.setLatitude(56.710817);
+        rightBottomLocation.setLongitude(53.557886);
+
+        LocationToMapKoeffX = (float)Math.abs((rightBottomLocation.getLatitude() - leftTopMapLocation.getLatitude()) / mapWidth);
+        LocationToMapKoeffY = (float)Math.abs((rightBottomLocation.getLongitude() - leftTopMapLocation.getLongitude()) / mapHeight);
+    }
+
+    public Point convertLocationToMap (Location object)
+    {
+        Point mapPoint = new Point();
+
+
+        float dx = -(float)(object.getLatitude() - leftTopMapLocation.getLatitude());
+        float dy = (float)(object.getLongitude() - leftTopMapLocation.getLongitude());
+
+        mapPoint.set(Math.round(dx/LocationToMapKoeffX),Math.round(dy/LocationToMapKoeffY));
+
+        return mapPoint;
     }
 
     public Bitmap getMap(boolean isBad)

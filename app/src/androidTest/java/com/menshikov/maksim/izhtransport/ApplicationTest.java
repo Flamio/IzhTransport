@@ -1,9 +1,14 @@
 package com.menshikov.maksim.izhtransport;
 
 import android.app.Application;
+import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.location.Location;
 import android.test.ApplicationTestCase;
 
+
+import junit.framework.Assert;
 
 import java.util.ArrayList;
 
@@ -221,6 +226,62 @@ public class ApplicationTest extends ApplicationTestCase<Application>
         ArrayList<Location> loc = tp.getTransportPositions(0, 0);
 
         assertTrue(loc.size() == 83);
+    }
+
+    public void testConvertionToMap()
+    {
+        MapModel mm = new MapModel(0,0,new IMapSource() {
+            @Override
+            public int getHeight() {
+                return 1920;
+            }
+
+            @Override
+            public int getWidth() {
+                return 1080;
+            }
+
+            @Override
+            public Bitmap getMap(Rect rect, int screenWidth, int screenHeight) {
+                return null;
+            }
+
+            @Override
+            public Bitmap getBadMap(Rect rect, int screenWidth, int screenHeight) {
+                return null;
+            }
+        });
+
+        Location loc = new Location("izh");
+        loc.setLatitude(56.990728);
+        loc.setLongitude(52.915183);
+
+        Point p = mm.convertLocationToMap(loc);
+
+        assertTrue(p.x == 0);
+        assertTrue(p.y == 0);
+
+        Location loc2 = new Location("izh");
+        loc2.setLatitude(56.98);
+        loc2.setLongitude(53);
+
+        Point p2 = mm.convertLocationToMap(loc2);
+
+        assertTrue(p2.x>=0);
+        assertTrue(p2.y>=0);
+
+        assertTrue(p2.x != 0);
+        assertTrue(p2.y != 0);
+
+        Location loc3 = new Location("izh");
+        loc3.setLatitude(56.710817);
+        loc3.setLongitude(53.557886);
+
+        Point p3 = mm.convertLocationToMap(loc3);
+
+        assertTrue(p3.x == 1080);
+        assertTrue(p3.y == 1920);
+
     }
 
 }
