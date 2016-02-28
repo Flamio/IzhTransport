@@ -284,4 +284,37 @@ public class ApplicationTest extends ApplicationTestCase<Application>
 
     }
 
+    public void testPointInRect()
+    {
+        MapModel mm = new MapModel(100,100,new IMapSource() {
+            @Override
+            public int getHeight() {
+                return 1080;
+            }
+
+            @Override
+            public int getWidth() {
+                return 1920;
+            }
+
+            @Override
+            public Bitmap getMap(Rect rect, int screenWidth, int screenHeight) {
+                return null;
+            }
+
+            @Override
+            public Bitmap getBadMap(Rect rect, int screenWidth, int screenHeight) {
+                return null;
+            }
+        });
+
+
+        assertFalse(mm.isPointInCurrentMapRect(new Point(0,0)));
+        assertTrue(mm.isPointInCurrentMapRect(new Point(300,300)));
+        assertFalse(mm.isPointInCurrentMapRect(new Point(1920,1080)));
+        assertTrue(mm.isPointInCurrentMapRect(new Point(350,350)));
+        assertTrue(mm.isPointInCurrentMapRect(new Point(400,400)));
+        assertFalse(mm.isPointInCurrentMapRect(new Point(401,400)));
+    }
+
 }

@@ -86,21 +86,6 @@ public class MapModel
         return currentLeft;
     }
 
-//    public float getAspectRatioScreen()
-//    {
-//        return (float)screenHeight/(float)screenWidth;
-//    }
-//
-//    public float getCurrentKoeffY()
-//    {
-//        return (float)currentHeight/(float)screenHeight;
-//    }
-//
-//    public float getCurrentKoeffX()
-//    {
-//        return (float)currentWidth/(float)screenWidth;
-//    }
-
     public MapModel(int _screenWidth, int _screenHeight, IMapSource mapSource)
     {
         screenWidth = _screenWidth;
@@ -135,6 +120,11 @@ public class MapModel
         mapPoint.set(Math.round(dx/LocationToMapKoeffX),Math.round(dy/LocationToMapKoeffY));
 
         return mapPoint;
+    }
+
+    public boolean isPointInCurrentMapRect(Point point)
+    {
+        return point.x >= currentLeft? point.y>=currentTop? point.x <=currentLeft+currentWidth? point.y<=currentTop+currentHeight? true :false :false :false :false;
     }
 
     public Bitmap getMap(boolean isBad)
