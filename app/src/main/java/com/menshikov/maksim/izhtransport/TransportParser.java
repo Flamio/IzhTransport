@@ -29,15 +29,18 @@ public class TransportParser
         source.setTransportParameters(idTransport,number);
         String response = source.getServerResponse();
 
-        Pattern p = Pattern.compile("[0-9]{2}\\.[0-9]{4}, [0-9]{2}\\.[0-9]{4}");
+        Pattern p = Pattern.compile("[0-9]{2}\\.[0-9]{1,4}, [0-9]{2}\\.[0-9]{1,4}");
         Matcher m = p.matcher(response);
 
         while (m.find())
         {
-            String s = m.group(1);
+            String s = m.group(0);
             Location location = new Location("izh");
-            location.setLatitude(Double.parseDouble(s.substring(0,7)));
-            location.setLongitude(Double.parseDouble(s.substring(9,7)));
+            int del = s.indexOf(',');
+
+            location.setLatitude(Double.parseDouble(s.substring(0,del)));
+            String temp = s.substring(del+1,s.length());
+            location.setLongitude(Double.parseDouble(temp));
             locations.add(location);
         }
 
