@@ -13,4 +13,5 @@ public interface IMapView
     void setBitmap(Bitmap bitmap);
     void setMapMoveListener(IMapMoveListener mapMoveListener);
     void setTransportPoints(ArrayList<Point> points);
+    void clearTransportPoints();
 }

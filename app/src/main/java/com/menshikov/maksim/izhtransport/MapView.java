@@ -44,6 +44,10 @@ public class MapView extends View implements View.OnTouchListener, IMapView
             canvas.drawBitmap(bitmap ,0, 0, new Paint(Paint.ANTI_ALIAS_FLAG));
         }
 
+        if(points == null)
+        {
+            return;
+        }
         for(int i = 0;i<points.size();i++)
         {
             canvas.drawRect(points.get(i).x-10,points.get(i).y-10,points.get(i).x+10,points.get(i).y+10,new Paint(Paint.ANTI_ALIAS_FLAG));
@@ -124,5 +128,14 @@ public class MapView extends View implements View.OnTouchListener, IMapView
     public void setTransportPoints(ArrayList<Point> points)
     {
         this.points = points;
+    }
+
+    @Override
+    public void clearTransportPoints()
+    {
+        if (points!=null)
+        {
+            points.clear();
+        }
     }
 }
