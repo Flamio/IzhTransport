@@ -253,8 +253,8 @@ public class ApplicationTest extends ApplicationTestCase<Application>
         });
 
         Location loc = new Location("izh");
-        loc.setLatitude(56.990728);
-        loc.setLongitude(52.915183);
+        loc.setLongitude(56.990728);
+        loc.setLatitude(52.915183);
 
         Point p = mm.convertLocationToMap(loc);
 
@@ -274,8 +274,8 @@ public class ApplicationTest extends ApplicationTestCase<Application>
         assertTrue(p2.y != 0);
 
         Location loc3 = new Location("izh");
-        loc3.setLatitude(56.710817);
-        loc3.setLongitude(53.557886);
+        loc3.setLongitude(56.710817);
+        loc3.setLatitude(53.557886);
 
         Point p3 = mm.convertLocationToMap(loc3);
 
@@ -308,7 +308,8 @@ public class ApplicationTest extends ApplicationTestCase<Application>
             }
         });
 
-
+        mm.setCurrentTop(300);
+        mm.setCurrentLeft(300);
         assertFalse(mm.isPointInCurrentMapRect(new Point(0,0)));
         assertTrue(mm.isPointInCurrentMapRect(new Point(300,300)));
         assertFalse(mm.isPointInCurrentMapRect(new Point(1920,1080)));

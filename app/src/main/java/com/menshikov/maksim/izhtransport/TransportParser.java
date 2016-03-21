@@ -38,9 +38,9 @@ public class TransportParser
             Location location = new Location("izh");
             int del = s.indexOf(',');
 
-            location.setLatitude(Double.parseDouble(s.substring(0,del)));
+            location.setLongitude(Double.parseDouble(s.substring(0,del)));
             String temp = s.substring(del+1,s.length());
-            location.setLongitude(Double.parseDouble(temp));
+            location.setLatitude(Double.parseDouble(temp));
             locations.add(location);
         }
 

@@ -8,6 +8,7 @@ import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -15,6 +16,7 @@ import android.view.View;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 /**
  * Created by Maksim on 05.02.2016.
@@ -26,6 +28,7 @@ public class MapView extends View implements View.OnTouchListener, IMapView
     private float beginX;
     private float beginY;
     private float beginGestureLine;
+    private ArrayList<Point> points;
 
     public MapView(Context context)
     {
@@ -39,6 +42,11 @@ public class MapView extends View implements View.OnTouchListener, IMapView
         if (bitmap!=null)
         {
             canvas.drawBitmap(bitmap ,0, 0, new Paint(Paint.ANTI_ALIAS_FLAG));
+        }
+
+        for(int i = 0;i<points.size();i++)
+        {
+            canvas.drawRect(points.get(i).x-10,points.get(i).y-10,points.get(i).x+10,points.get(i).y+10,new Paint(Paint.ANTI_ALIAS_FLAG));
         }
     }
 
@@ -110,5 +118,11 @@ public class MapView extends View implements View.OnTouchListener, IMapView
     public void setMapMoveListener(IMapMoveListener _mapMoveListener)
     {
         mapMoveListener = _mapMoveListener;
+    }
+
+    @Override
+    public void setTransportPoints(ArrayList<Point> points)
+    {
+        this.points = points;
     }
 }
