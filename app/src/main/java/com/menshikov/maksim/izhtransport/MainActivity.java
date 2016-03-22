@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
+import java.io.IOException;
+
 
 public class MainActivity extends Activity {
 
@@ -21,7 +23,11 @@ public class MainActivity extends Activity {
         int height = displaymetrics.heightPixels;
         int width = displaymetrics.widthPixels;
 
-        MapPresenter mapPresenter = new MapPresenter(new MapModel(width, height,new ResourceMapSource(getResources())), mapView);
+        try {
+            MapPresenter mapPresenter = new MapPresenter(new MapModel(width, height,new ResourceMapSource(getResources()), new TransportInfoSource()), mapView);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         setContentView(mapView);
     }

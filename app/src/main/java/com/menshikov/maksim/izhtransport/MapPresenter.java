@@ -4,6 +4,7 @@ import android.graphics.Point;
 import android.location.Location;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -15,8 +16,7 @@ public class MapPresenter
     private MapModel model = null;
     private IMapView view = null;
 
-    public MapPresenter(MapModel _model, IMapView _view)
-    {
+    public MapPresenter(MapModel _model, IMapView _view) throws IOException {
         model = _model;
         view =  _view;
         view.setMapMoveListener(new IMapMoveListener() {
@@ -30,8 +30,7 @@ public class MapPresenter
             }
 
             @Override
-            public void onStopMoving()
-            {
+            public void onStopMoving() throws InterruptedException {
                 view.setBitmap(model.getMap(false));
                 view.setTransportPoints(model.getTransportPoints());
             }
@@ -64,7 +63,7 @@ public class MapPresenter
         });
 
         view.setBitmap(model.getMap(false));
-        view.setTransportPoints(model.getTransportPoints());
+      //  view.setTransportPoints(model.getTransportPoints());
 
     }
 

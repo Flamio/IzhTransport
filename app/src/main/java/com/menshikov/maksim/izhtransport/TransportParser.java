@@ -2,6 +2,7 @@ package com.menshikov.maksim.izhtransport;
 
 import android.location.Location;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -22,13 +23,15 @@ public class TransportParser
         this.source = source;
     }
 
-    public ArrayList<Location> getTransportPositions(int idTransport, int number)
-    {
+    public ArrayList<Location> getTransportPositions(int idTransport, int number) throws InterruptedException {
         ArrayList<Location> locations = new ArrayList<Location>();
 
         source.setTransportParameters(idTransport,number);
         String response = source.getServerResponse();
-
+        if (response == null)
+        {
+            return null;
+        }
         Pattern p = Pattern.compile("[0-9]{2}\\.[0-9]{1,4}, [0-9]{2}\\.[0-9]{1,4}");
         Matcher m = p.matcher(response);
 

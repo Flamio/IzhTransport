@@ -102,8 +102,14 @@ public class MapView extends View implements View.OnTouchListener, IMapView
 
                 break;
             case MotionEvent.ACTION_UP: // отпускание
-                mapMoveListener.onStopMoving();
-               break;
+                try {
+                    mapMoveListener.onStopMoving();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                break;
             case MotionEvent.ACTION_CANCEL:
 
                 break;
