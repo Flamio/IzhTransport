@@ -1,11 +1,6 @@
-package com.menshikov.maksim.izhtransport;
-
-import android.graphics.Point;
-import android.location.Location;
-import android.util.Log;
+package com.menshikov.maksim.izhtransport.map;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by Maksim on 17.02.2016.
@@ -32,7 +27,6 @@ public class MapPresenter
             @Override
             public void onStopMoving() throws InterruptedException {
                 view.setBitmap(model.getMap(false));
-                view.setTransportPoints(model.getTransportPoints());
             }
 
             @Override
@@ -63,7 +57,6 @@ public class MapPresenter
         });
 
         view.setBitmap(model.getMap(false));
-      //  view.setTransportPoints(model.getTransportPoints());
 
     }
 

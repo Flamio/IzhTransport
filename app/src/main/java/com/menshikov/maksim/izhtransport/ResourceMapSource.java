@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Rect;
 
+import com.menshikov.maksim.izhtransport.map.IMapSource;
+
 import java.io.IOException;
 import java.io.InputStream;
 

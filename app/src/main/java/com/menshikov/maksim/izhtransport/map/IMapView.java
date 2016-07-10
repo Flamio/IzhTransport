@@ -1,4 +1,4 @@
-package com.menshikov.maksim.izhtransport;
+package com.menshikov.maksim.izhtransport.map;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;

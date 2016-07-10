@@ -1,12 +1,12 @@
 package com.menshikov.maksim.izhtransport;
 
 import android.app.Activity;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.LinearLayout;
+
+import com.menshikov.maksim.izhtransport.map.MapModel;
+import com.menshikov.maksim.izhtransport.map.MapPresenter;
+import com.menshikov.maksim.izhtransport.map.MapView;
 
 import java.io.IOException;
 

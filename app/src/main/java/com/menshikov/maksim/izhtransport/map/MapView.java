@@ -1,21 +1,15 @@
-package com.menshikov.maksim.izhtransport;
+package com.menshikov.maksim.izhtransport.map;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 /**

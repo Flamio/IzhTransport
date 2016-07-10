@@ -8,11 +8,10 @@ import android.location.Location;
 import android.test.ApplicationTestCase;
 
 
-import junit.framework.Assert;
+import com.menshikov.maksim.izhtransport.map.IMapSource;
+import com.menshikov.maksim.izhtransport.map.MapModel;
 
 import java.util.ArrayList;
-
-import dalvik.annotation.TestTarget;
 
 
 /**
