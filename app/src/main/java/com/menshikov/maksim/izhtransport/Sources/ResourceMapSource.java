@@ -1,4 +1,4 @@
-package com.menshikov.maksim.izhtransport;
+package com.menshikov.maksim.izhtransport.Sources;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Rect;
 
+import com.menshikov.maksim.izhtransport.R;
 import com.menshikov.maksim.izhtransport.map.IMapSource;
 
 import java.io.IOException;

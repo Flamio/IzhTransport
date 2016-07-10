@@ -1,4 +1,4 @@
-package com.menshikov.maksim.izhtransport;
+package com.menshikov.maksim.izhtransport.Sources;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

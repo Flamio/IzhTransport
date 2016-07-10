@@ -1,13 +1,17 @@
-package com.menshikov.maksim.izhtransport.map;
+package com.menshikov.maksim.izhtransport;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.menshikov.maksim.izhtransport.map.IMapMoveListener;
+import com.menshikov.maksim.izhtransport.map.IMapView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +33,19 @@ public class MapView extends View implements View.OnTouchListener, IMapView
         super(context);
         setOnTouchListener(this);
     }
+
+    public MapView(Context context, AttributeSet attrs)
+    {
+        super(context,attrs);
+        setOnTouchListener(this);
+    }
+
+    public MapView(Context context, AttributeSet attrs, int defStyle)
+    {
+        super(context,attrs,defStyle);
+        setOnTouchListener(this);
+    }
+
 
     @Override
     protected void onDraw(Canvas canvas)

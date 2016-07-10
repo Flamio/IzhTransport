@@ -8,6 +8,8 @@ import android.location.Location;
 import android.test.ApplicationTestCase;
 
 
+import com.menshikov.maksim.izhtransport.Sources.ITransportInfoSource;
+import com.menshikov.maksim.izhtransport.Transport.TransportParser;
 import com.menshikov.maksim.izhtransport.map.IMapSource;
 import com.menshikov.maksim.izhtransport.map.MapModel;
 

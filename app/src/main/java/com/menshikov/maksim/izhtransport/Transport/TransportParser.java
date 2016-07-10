@@ -1,10 +1,10 @@
-package com.menshikov.maksim.izhtransport;
+package com.menshikov.maksim.izhtransport.Transport;
 
 import android.location.Location;
 
-import java.io.IOException;
+import com.menshikov.maksim.izhtransport.Sources.ITransportInfoSource;
+
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,8 +48,6 @@ public class TransportParser
         }
 
         return locations;
-
-
     }
 
 }
