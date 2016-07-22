@@ -14,4 +14,7 @@ public interface IMapView
     void setMapMoveListener(IMapMoveListener mapMoveListener);
     void setTransportPoints(ArrayList<Point> points);
     void clearTransportPoints();
+    void setXYMap(int x, int y);
+    Point getXYMap();
+    void redraw();
 }

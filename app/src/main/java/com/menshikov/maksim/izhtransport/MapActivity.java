@@ -3,6 +3,7 @@ package com.menshikov.maksim.izhtransport;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -51,11 +52,13 @@ public class MapActivity extends Activity {
         MapMoveListener mapMoveListener = new MapMoveListener(model, mapView);
 
         Observable<Bitmap> fetchMap = Observable.create(mapMoveListener);
+
         mapView.setMapMoveListener(mapMoveListener);
 
         fetchMap.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Bitmap>() {
             @Override
             public void call(Bitmap s) {
+                mapView.setXYMap(0,0);
                 mapView.setBitmap(s);
             }
         });

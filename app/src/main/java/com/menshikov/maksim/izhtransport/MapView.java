@@ -27,6 +27,24 @@ public class MapView extends View implements View.OnTouchListener, IMapView
     private float beginY;
     private float beginGestureLine;
     private ArrayList<Point> points;
+    private int xMap=0;
+    private int yMap=0;
+
+    public void setXYMap(int x, int y)
+    {
+        this.xMap = x;
+        this.yMap = y;
+    }
+
+    @Override
+    public Point getXYMap() {
+        return new Point(this.xMap,this.yMap);
+    }
+
+    @Override
+    public void redraw() {
+        invalidate();
+    }
 
     public MapView(Context context)
     {
@@ -52,7 +70,7 @@ public class MapView extends View implements View.OnTouchListener, IMapView
     {
         if (bitmap!=null)
         {
-            canvas.drawBitmap(bitmap ,0, 0, new Paint(Paint.ANTI_ALIAS_FLAG));
+            canvas.drawBitmap(bitmap ,xMap, yMap, new Paint(Paint.ANTI_ALIAS_FLAG));
         }
 
         if(points == null)

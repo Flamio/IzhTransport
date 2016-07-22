@@ -12,7 +12,8 @@ import java.net.URL;
  */
 public class TransportInfoSource implements ITransportInfoSource {
     @Override
-    public void setTransportParameters(int transportId, int number) {
+    public void setTransportParameters(int transportId, int number)
+    {
 
     }
 
