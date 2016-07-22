@@ -1,4 +1,4 @@
-package com.menshikov.maksim.izhtransport.Sources;
+package com.menshikov.maksim.izhtransport.map;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;

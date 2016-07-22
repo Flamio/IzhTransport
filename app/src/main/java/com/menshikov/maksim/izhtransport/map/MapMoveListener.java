@@ -23,9 +23,8 @@ public class MapMoveListener implements IMapMoveListener, Observable.OnSubscribe
     private Runnable handlerRunnable = new Runnable() {
         @Override
         public void run() {
-            view.clearTransportPoints();
-            call(subscriber);
-            handler.postDelayed(this, updateInterval);
+            //call(subscriber);
+            //handler.postDelayed(this, updateInterval);
         }
     };
 
@@ -40,10 +39,10 @@ public class MapMoveListener implements IMapMoveListener, Observable.OnSubscribe
         model.setCurrentTop(model.getCurrentTop() + dy);
         this.view.setXYMap(this.view.getXYMap().x - dx, this.view.getXYMap().y - dy);
         this.view.redraw();
-        if (!this.isTimerRunning){
+        /*if (!this.isTimerRunning){
             handler.postDelayed(handlerRunnable, this.updateInterval);
             this.isTimerRunning = true;
-        }
+        }*/
     }
 
     @Override
@@ -56,7 +55,7 @@ public class MapMoveListener implements IMapMoveListener, Observable.OnSubscribe
     @Override
     public void onScaling(boolean increase, int centerX, int centerY) {
 
-        int newLeftOffset = model.getCurrentWidth() / 100;
+       /* int newLeftOffset = model.getCurrentWidth() / 100;
         int newTopOffset = model.getCurrentHeight() / 100;
 
         int sign = 0;
@@ -76,7 +75,7 @@ public class MapMoveListener implements IMapMoveListener, Observable.OnSubscribe
             this.isTimerRunning = true;
         }
         //this.call(this.subscriber);
-        //view.clearTransportPoints();
+        //view.clearTransportPoints();*/
     }
 
     @Override

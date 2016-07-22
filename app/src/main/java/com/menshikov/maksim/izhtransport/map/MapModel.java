@@ -17,23 +17,32 @@ public class MapModel {
     private final int screenWidth;
     private final int screenHeight;
     private IMapSource mapSource;
-    private ITransportInfoSource transportInfoSource;
 
-    private int mapWidth;
-    private int mapHeight;
+    public static int mapWidth;
+    public static int mapHeight;
 
     private int currentLeft = 3000;
     private int currentTop = 3000;
     private int currentWidth;
     private int currentHeight;
 
-    private float LocationToMapKoeffX;
-    private float LocationToMapKoeffY;
+    public static Location leftTopMapLocation;
+    public static Location rightBottomLocation;
 
-    private Location leftTopMapLocation;
-    private Location rightBottomLocation;
 
-    private TransportParser transportParser;
+    public void convertPointToScreenCoord(IMapPoint point)
+    {
+        if (!this.isPointInCurrentMapRect(point))
+            return;
+
+        float kx = (float) currentWidth / screenWidth;
+        float ky = (float) currentHeight / screenHeight;
+
+        point.getXY().x /= kx;
+        point.getXY().y /= ky;
+        point.getXY().x -= (float) getCurrentLeft() / kx;
+        point.getXY().y -= (float) getCurrentTop() / ky;
+    }
 
     public int getCurrentWidth() {
         return currentWidth;
@@ -67,11 +76,10 @@ public class MapModel {
         return currentLeft;
     }
 
-    public MapModel(int _screenWidth, int _screenHeight, IMapSource mapSource, ITransportInfoSource transportInfoSource) {
+    public MapModel(int _screenWidth, int _screenHeight, IMapSource mapSource) {
         screenWidth = _screenWidth;
         screenHeight = _screenHeight;
         this.mapSource = mapSource;
-        this.transportInfoSource = transportInfoSource;
         currentHeight = screenHeight;
         currentWidth = screenWidth;
 
@@ -85,26 +93,10 @@ public class MapModel {
         leftTopMapLocation.setLatitude(52.915183);
         rightBottomLocation.setLongitude(56.710817);
         rightBottomLocation.setLatitude(53.557886);
-
-        LocationToMapKoeffX = (float) Math.abs((rightBottomLocation.getLatitude() - leftTopMapLocation.getLatitude()) / mapWidth);
-        LocationToMapKoeffY = (float) Math.abs((rightBottomLocation.getLongitude() - leftTopMapLocation.getLongitude()) / mapHeight);
-
-        transportParser = new TransportParser(transportInfoSource);
     }
 
-    public Point convertLocationToMap(Location object) {
-        Point mapPoint = new Point();
-
-        float dx = ((float) (object.getLatitude() - leftTopMapLocation.getLatitude()));
-        float dy = -(float) (object.getLongitude() - leftTopMapLocation.getLongitude());
-
-        mapPoint.set(Math.round(dx / LocationToMapKoeffX), Math.round(dy / LocationToMapKoeffY));
-
-        return mapPoint;
-    }
-
-    public boolean isPointInCurrentMapRect(Point point) {
-        return point.x >= currentLeft ? point.y >= currentTop ? point.x <= currentLeft + currentWidth ? point.y <= currentTop + currentHeight ? true : false : false : false : false;
+    public boolean isPointInCurrentMapRect(IMapPoint point) {
+        return point.getXY().x >= currentLeft ? point.getXY().y >= currentTop ? point.getXY().x <= currentLeft + currentWidth ? point.getXY().y <= currentTop + currentHeight ? true : false : false : false : false;
     }
 
     public Bitmap getMap(boolean isBad) {
@@ -113,30 +105,5 @@ public class MapModel {
         } else {
             return mapSource.getMap(new Rect(currentLeft, currentTop, currentLeft + currentWidth, currentTop + currentHeight), screenWidth, screenHeight);
         }
-    }
-
-    public ArrayList<Point> getTransportPoints() throws InterruptedException {
-        ArrayList<Location> locations = transportParser.getTransportPositions(0, 0);
-        if (locations == null) {
-            return null;
-        }
-
-        ArrayList<Point> points = new ArrayList<Point>();
-
-        for (int i = 0; i < locations.size(); i++) {
-            Point currentPoint = convertLocationToMap(locations.get(i));
-            if (isPointInCurrentMapRect(currentPoint)) {
-                float kx = (float) currentWidth / screenWidth;
-                float ky = (float) currentHeight / screenHeight;
-
-                currentPoint.x /= kx;
-                currentPoint.y /= ky;
-                currentPoint.x -= (float) getCurrentLeft() / kx;
-                currentPoint.y -= (float) getCurrentTop() / ky;
-
-                points.add(currentPoint);
-            }
-        }
-        return points;
     }
 }

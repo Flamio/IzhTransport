@@ -23,6 +23,7 @@ public class TransportParser
         this.source = source;
     }
 
+    // TODO сделать чтобы возвращал IMapPoint
     public ArrayList<Location> getTransportPositions(int idTransport, int number) throws InterruptedException {
         ArrayList<Location> locations = new ArrayList<Location>();
 
