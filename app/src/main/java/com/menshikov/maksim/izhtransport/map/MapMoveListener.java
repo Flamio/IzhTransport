@@ -38,7 +38,7 @@ public class MapMoveListener implements IMapMoveListener, Observable.OnSubscribe
         model.setCurrentLeft(model.getCurrentLeft() + dx);
         model.setCurrentTop(model.getCurrentTop() + dy);
         this.view.setXYMap(this.view.getXYMap().x - dx, this.view.getXYMap().y - dy);
-        this.view.redraw();
+        this.view.redraw(false);
         /*if (!this.isTimerRunning){
             handler.postDelayed(handlerRunnable, this.updateInterval);
             this.isTimerRunning = true;

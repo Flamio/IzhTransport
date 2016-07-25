@@ -36,13 +36,14 @@ public class TransportFetcher implements Observable.OnSubscribe<ArrayList<IMapPo
 
     public TransportFetcher(TransportParser transportParser) {
         this.transportParser = transportParser;
-        handler.postDelayed(handlerRunnable, updateInterval);
     }
 
     @Override
     public void call(Subscriber<? super ArrayList<IMapPoint>> subscriber) {
-        if (this.subscriber == null)
+        if (this.subscriber == null) {
             this.subscriber = subscriber;
+            //handler.postDelayed(handlerRunnable, updateInterval);
+        }
 
         try {
             ArrayList<Location> locations = transportParser.getTransportPositions(0, 0);

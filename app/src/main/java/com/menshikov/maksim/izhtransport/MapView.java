@@ -20,7 +20,8 @@ import java.util.ArrayList;
 /**
  * Created by Maksim on 05.02.2016.
  */
-public class MapView extends View implements View.OnTouchListener, IMapView {
+public class MapView extends View implements View.OnTouchListener, IMapView
+{
     private Bitmap bitmap;
     private IMapMoveListener mapMoveListener;
     private float beginX;
@@ -31,41 +32,49 @@ public class MapView extends View implements View.OnTouchListener, IMapView {
     private int yMap = 0;
     private boolean isDrawMovingPoints = true;
 
-    public void setXYMap(int x, int y) {
+    public void setXYMap(int x, int y)
+    {
         this.xMap = x;
         this.yMap = y;
     }
 
     @Override
-    public Point getXYMap() {
+    public Point getXYMap()
+    {
         return new Point(this.xMap, this.yMap);
     }
 
     @Override
-    public void redraw() {
-        this.isDrawMovingPoints = false;
+    public void redraw(boolean isDrawingTransport)
+    {
+        this.isDrawMovingPoints = isDrawingTransport;
         invalidate();
     }
 
-    public MapView(Context context) {
+    public MapView(Context context)
+    {
         super(context);
         setOnTouchListener(this);
     }
 
-    public MapView(Context context, AttributeSet attrs) {
+    public MapView(Context context, AttributeSet attrs)
+    {
         super(context, attrs);
         setOnTouchListener(this);
     }
 
-    public MapView(Context context, AttributeSet attrs, int defStyle) {
+    public MapView(Context context, AttributeSet attrs, int defStyle)
+    {
         super(context, attrs, defStyle);
         setOnTouchListener(this);
     }
 
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        if (bitmap != null) {
+    protected void onDraw(Canvas canvas)
+    {
+        if (bitmap != null)
+        {
             canvas.drawBitmap(bitmap, xMap, yMap, new Paint(Paint.ANTI_ALIAS_FLAG));
         }
 
@@ -75,22 +84,26 @@ public class MapView extends View implements View.OnTouchListener, IMapView {
             return;
         }
 
-        if (points == null) {
+        if (points == null)
+        {
             return;
         }
-        for (int i = 0; i < points.size(); i++) {
+        for (int i = 0; i < points.size(); i++)
+        {
             this.points.get(i).draw(canvas);
-            //canvas.drawRect(points.get(i).x-10,points.get(i).y-10,points.get(i).x+10,points.get(i).y+10,new Paint(Paint.ANTI_ALIAS_FLAG));
         }
     }
 
     @Override
-    public boolean onTouch(View v, MotionEvent event) {
+    public boolean onTouch(View v, MotionEvent event)
+    {
         int touches = event.getPointerCount();
-        switch (event.getActionMasked()) {
+        switch (event.getActionMasked())
+        {
 
             case MotionEvent.ACTION_POINTER_DOWN: // последующие касания
-                if (touches == 2) {
+                if (touches == 2)
+                {
                     beginGestureLine = (float) Math.sqrt(Math.pow(event.getX(1) - event.getX(0), 2.0) + Math.pow(event.getY(1) - event.getY(0), 2.0));
                     Log.d("2touch", Float.toString(beginGestureLine) + "begin");
                 }
@@ -103,15 +116,18 @@ public class MapView extends View implements View.OnTouchListener, IMapView {
                 break;
             case MotionEvent.ACTION_MOVE: // движение
 
-                if (touches == 2) {
+                if (touches == 2)
+                {
                     float tempGestureLine = (float) Math.sqrt(Math.pow(event.getX(1) - event.getX(0), 2.0) + Math.pow(event.getY(1) - event.getY(0), 2.0));
                     int centerX = (int) Math.round(event.getX(1) + event.getX(0) / (float) 2);
                     int centerY = (int) Math.round(event.getY(1) + event.getY(0) / (float) 2);
 
                     Log.d("2touch", Float.toString(tempGestureLine));
-                    if (tempGestureLine > beginGestureLine) {
+                    if (tempGestureLine > beginGestureLine)
+                    {
                         mapMoveListener.onScaling(true, centerX, centerY);
-                    } else if (tempGestureLine < beginGestureLine) {
+                    } else if (tempGestureLine < beginGestureLine)
+                    {
                         mapMoveListener.onScaling(false, centerX, centerY);
                     }
                     break;
@@ -126,11 +142,14 @@ public class MapView extends View implements View.OnTouchListener, IMapView {
 
                 break;
             case MotionEvent.ACTION_UP: // отпускание
-                try {
+                try
+                {
                     mapMoveListener.onStopMoving();
-                } catch (IOException e) {
+                } catch (IOException e)
+                {
                     e.printStackTrace();
-                } catch (InterruptedException e) {
+                } catch (InterruptedException e)
+                {
                     e.printStackTrace();
                 }
                 break;
@@ -142,24 +161,30 @@ public class MapView extends View implements View.OnTouchListener, IMapView {
     }
 
     @Override
-    public void setBitmap(Bitmap _bitmap) {
+    public void setBitmap(Bitmap _bitmap)
+    {
         bitmap = _bitmap;
         invalidate();
     }
 
     @Override
-    public void setMapMoveListener(IMapMoveListener _mapMoveListener) {
+    public void setMapMoveListener(IMapMoveListener _mapMoveListener)
+    {
         mapMoveListener = _mapMoveListener;
     }
 
     @Override
-    public void setMapPoints(ArrayList<IMapPoint> points) {
+    public void setMapPoints(ArrayList<IMapPoint> points)
+    {
         this.points = points;
+        this.invalidate();
     }
 
     @Override
-    public void clearTransportPoints() {
-        if (points != null) {
+    public void clearTransportPoints()
+    {
+        if (points != null)
+        {
             points.clear();
         }
     }

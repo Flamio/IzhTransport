@@ -30,10 +30,10 @@ public class MapModel {
     public static Location rightBottomLocation;
 
 
-    public void convertPointToScreenCoord(IMapPoint point)
+    public boolean convertPointToScreenCoord(IMapPoint point)
     {
         if (!this.isPointInCurrentMapRect(point))
-            return;
+            return false;
 
         float kx = (float) currentWidth / screenWidth;
         float ky = (float) currentHeight / screenHeight;
@@ -42,6 +42,7 @@ public class MapModel {
         point.getXY().y /= ky;
         point.getXY().x -= (float) getCurrentLeft() / kx;
         point.getXY().y -= (float) getCurrentTop() / ky;
+        return true;
     }
 
     public int getCurrentWidth() {

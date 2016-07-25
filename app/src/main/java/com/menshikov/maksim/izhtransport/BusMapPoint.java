@@ -40,4 +40,13 @@ public class BusMapPoint implements IMapPoint {
         Rect drawingRect = new Rect(this.point.x-10,this.point.y-10,this.point.x+10,this.point.y+10);
         canvas.drawBitmap(busIcon,new Rect(0,0,128,128),drawingRect, null);
     }
+
+    @Override
+    public BusMapPoint clone()
+    {
+        BusMapPoint busPoint = new BusMapPoint();
+        busPoint.setXY(new Point(this.getXY()));
+        return busPoint;
+    }
+
 }

@@ -6,7 +6,7 @@ import android.graphics.Point;
 /**
  * Created by Maksim on 22.07.2016.
  */
-public interface IMapPoint
+public interface IMapPoint extends ICloneable
 {
     void setXY(Point point);
     Point getXY();

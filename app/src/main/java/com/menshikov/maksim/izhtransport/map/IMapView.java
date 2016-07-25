@@ -16,5 +16,5 @@ public interface IMapView
     void clearTransportPoints();
     void setXYMap(int x, int y);
     Point getXYMap();
-    void redraw();
+    void redraw(boolean isDrawingTransport);
 }
