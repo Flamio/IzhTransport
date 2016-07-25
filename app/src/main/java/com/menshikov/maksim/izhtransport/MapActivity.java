@@ -90,7 +90,7 @@ public class MapActivity extends Activity
 
         TransportFetcher transportFetcher = new TransportFetcher(new TransportParser(new TransportInfoSource()));
 
-        Observable<ArrayList<IMapPoint>> fetchTransport = Observable.interval(2, TimeUnit.SECONDS).timeInterval().create(transportFetcher);
+        Observable<ArrayList<IMapPoint>> fetchTransport = Observable.create(transportFetcher);
 
         mapView.setMapMoveListener(mapMoveListener);
 

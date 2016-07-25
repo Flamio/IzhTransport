@@ -10,6 +10,8 @@ import com.menshikov.maksim.izhtransport.map.IMapPoint;
 import com.menshikov.maksim.izhtransport.map.PointConverter;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -23,26 +25,26 @@ public class TransportFetcher implements Observable.OnSubscribe<ArrayList<IMapPo
     private Subscriber<? super ArrayList<IMapPoint>> subscriber;
     private long updateInterval = 1000;
 
-    final Handler handler = new Handler();
-    private Runnable handlerRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (subscriber == null)
-                return;
-            call(subscriber);
-            handler.postDelayed(this, updateInterval);
-        }
-    };
+    private Timer timer = new Timer();
 
     public TransportFetcher(TransportParser transportParser) {
         this.transportParser = transportParser;
     }
 
     @Override
-    public void call(Subscriber<? super ArrayList<IMapPoint>> subscriber) {
+    public void call(Subscriber<? super ArrayList<IMapPoint>> subscriberPar) {
         if (this.subscriber == null) {
-            this.subscriber = subscriber;
-            //handler.postDelayed(handlerRunnable, updateInterval);
+            this.subscriber = subscriberPar;
+            timer.schedule(new TimerTask()
+            {
+                @Override
+                public void run()
+                {
+                    if (subscriber == null)
+                        return;
+                    call(subscriber);
+                }
+            }, 1000, 1000);
         }
 
         try {
@@ -57,7 +59,6 @@ public class TransportFetcher implements Observable.OnSubscribe<ArrayList<IMapPo
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 
    /* public ArrayList<Point> getTransportPoints() throws InterruptedException {
