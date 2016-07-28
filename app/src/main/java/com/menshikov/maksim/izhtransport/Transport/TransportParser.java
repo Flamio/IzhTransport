@@ -33,19 +33,31 @@ public class TransportParser
         {
             return null;
         }
-        Pattern p = Pattern.compile("[0-9]{2}\\.[0-9]{1,4}, [0-9]{2}\\.[0-9]{1,4}");
+       // Pattern p = Pattern.compile("[0-9]{2}\\.[0-9]{1,4}, [0-9]{2}\\.[0-9]{1,4}");
+        Pattern p = Pattern.compile("(?<=myPlacemark = )[\\s\\S]+?(?=doc_layers)");
+
         Matcher m = p.matcher(response);
 
         while (m.find())
         {
-            String s = m.group(0);
-            Location location = new Location("izh");
-            int del = s.indexOf(',');
 
-            location.setLongitude(Double.parseDouble(s.substring(0,del)));
-            String temp = s.substring(del+1,s.length());
-            location.setLatitude(Double.parseDouble(temp));
-            locations.add(location);
+
+            String s = m.group(0);
+
+            Pattern locationPattern = Pattern.compile("[0-9]{2}\\.[0-9]{1,4}, [0-9]{2}\\.[0-9]{1,4}");
+            Matcher locationMatcher = locationPattern.matcher(s);
+
+            if (locationMatcher.find())
+            {
+                String locationString = locationMatcher.group(0);
+                Location location = new Location("izh");
+                int del = locationString.indexOf(',');
+
+                location.setLongitude(Double.parseDouble(locationString.substring(0, del)));
+                String temp = locationString.substring(del + 1, locationString.length());
+                location.setLatitude(Double.parseDouble(temp));
+                locations.add(location);
+            }
         }
 
         return locations;

@@ -19,7 +19,8 @@ import rx.Subscriber;
 /**
  * Created by Maksim on 22.07.2016.
  */
-public class TransportFetcher implements Observable.OnSubscribe<ArrayList<IMapPoint>> {
+public class TransportFetcher implements Observable.OnSubscribe<ArrayList<IMapPoint>>
+{
 
     private TransportParser transportParser;
     private Subscriber<? super ArrayList<IMapPoint>> subscriber;
@@ -27,13 +28,16 @@ public class TransportFetcher implements Observable.OnSubscribe<ArrayList<IMapPo
 
     private Timer timer = new Timer();
 
-    public TransportFetcher(TransportParser transportParser) {
+    public TransportFetcher(TransportParser transportParser)
+    {
         this.transportParser = transportParser;
     }
 
     @Override
-    public void call(Subscriber<? super ArrayList<IMapPoint>> subscriberPar) {
-        if (this.subscriber == null) {
+    public void call(Subscriber<? super ArrayList<IMapPoint>> subscriberPar)
+    {
+        if (this.subscriber == null)
+        {
             this.subscriber = subscriberPar;
             timer.schedule(new TimerTask()
             {
@@ -44,19 +48,22 @@ public class TransportFetcher implements Observable.OnSubscribe<ArrayList<IMapPo
                         return;
                     call(subscriber);
                 }
-            }, 1000, 1000);
+            }, updateInterval, updateInterval);
         }
 
-        try {
+        try
+        {
             ArrayList<Location> locations = transportParser.getTransportPositions(0, 0);
             ArrayList<IMapPoint> mapPoints = new ArrayList<IMapPoint>();
-            for (int i = 0; i < locations.size(); i++) {
+            for (int i = 0; i < locations.size(); i++)
+            {
                 BusMapPoint busPoint = new BusMapPoint();
                 PointConverter.convertToMapPoint(locations.get(i), busPoint);
                 mapPoints.add(busPoint);
             }
             this.subscriber.onNext(mapPoints);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException e)
+        {
             e.printStackTrace();
         }
     }
