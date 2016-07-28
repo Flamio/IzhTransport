@@ -24,43 +24,47 @@ public class TransportParser
     }
 
     // TODO сделать чтобы возвращал IMapPoint
-    public ArrayList<Location> getTransportPositions(int idTransport, int number) throws InterruptedException {
+    public ArrayList<Location> getTransportPositions(int idTransport, int number) throws InterruptedException
+    {
         ArrayList<Location> locations = new ArrayList<Location>();
 
-        source.setTransportParameters(idTransport,number);
+        source.setTransportParameters(idTransport, number);
         String response = source.getServerResponse();
         if (response == null)
         {
             return null;
         }
-       // Pattern p = Pattern.compile("[0-9]{2}\\.[0-9]{1,4}, [0-9]{2}\\.[0-9]{1,4}");
-        Pattern p = Pattern.compile("(?<=myPlacemark = )[\\s\\S]+?(?=doc_layers)");
 
-        Matcher m = p.matcher(response);
+        ArrayList<String> placemarks = this.getStringByPattern(response,"(?<=myPlacemark = )[\\s\\S]+?(?=doc_layers)");
+        if (placemarks.isEmpty())
+            return null;
 
-        while (m.find())
+        for (String placemark : placemarks)
         {
-
-
-            String s = m.group(0);
-
-            Pattern locationPattern = Pattern.compile("[0-9]{2}\\.[0-9]{1,4}, [0-9]{2}\\.[0-9]{1,4}");
-            Matcher locationMatcher = locationPattern.matcher(s);
-
-            if (locationMatcher.find())
+            ArrayList<String> locationsString = this.getStringByPattern(placemark,"[0-9]{2}\\.[0-9]{1,4}, [0-9]{2}\\.[0-9]{1,4}");
+            if (!locationsString.isEmpty())
             {
-                String locationString = locationMatcher.group(0);
                 Location location = new Location("izh");
-                int del = locationString.indexOf(',');
+                int del = locationsString.get(0).indexOf(',');
 
-                location.setLongitude(Double.parseDouble(locationString.substring(0, del)));
-                String temp = locationString.substring(del + 1, locationString.length());
+                location.setLongitude(Double.parseDouble(locationsString.get(0).substring(0, del)));
+                String temp = locationsString.get(0).substring(del + 1, locationsString.get(0).length());
                 location.setLatitude(Double.parseDouble(temp));
                 locations.add(location);
             }
+
         }
 
         return locations;
     }
 
+    private ArrayList<String> getStringByPattern(String input, String pattern)
+    {
+        Pattern localPattern = Pattern.compile(pattern);
+        Matcher matcher = localPattern.matcher(input);
+        ArrayList<String> found = new ArrayList<>();
+        while (matcher.find())
+            found.add(matcher.group(0));
+        return found;
+    }
 }
