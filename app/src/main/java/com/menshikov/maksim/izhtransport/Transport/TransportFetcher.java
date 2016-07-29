@@ -67,29 +67,4 @@ public class TransportFetcher implements Observable.OnSubscribe<ArrayList<IMapPo
             e.printStackTrace();
         }
     }
-
-   /* public ArrayList<Point> getTransportPoints() throws InterruptedException {
-        ArrayList<Location> locations = transportParser.getTransportPositions(0, 0);
-        if (locations == null) {
-            return null;
-        }
-
-        ArrayList<Point> points = new ArrayList<Point>();
-
-        for (int i = 0; i < locations.size(); i++) {
-            Point currentPoint = convertLocationToMap(locations.get(i));
-            if (isPointInCurrentMapRect(currentPoint)) {
-                float kx = (float) currentWidth / screenWidth;
-                float ky = (float) currentHeight / screenHeight;
-
-                currentPoint.x /= kx;
-                currentPoint.y /= ky;
-                currentPoint.x -= (float) getCurrentLeft() / kx;
-                currentPoint.y -= (float) getCurrentTop() / ky;
-
-                points.add(currentPoint);
-            }
-        }
-        return points;
-    }*/
 }

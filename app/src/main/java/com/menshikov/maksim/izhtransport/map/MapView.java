@@ -1,4 +1,4 @@
-package com.menshikov.maksim.izhtransport;
+package com.menshikov.maksim.izhtransport.map;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -164,7 +164,6 @@ public class MapView extends View implements View.OnTouchListener, IMapView
     public void setBitmap(Bitmap _bitmap)
     {
         bitmap = _bitmap;
-        invalidate();
     }
 
     @Override
@@ -177,7 +176,6 @@ public class MapView extends View implements View.OnTouchListener, IMapView
     public void setMapPoints(ArrayList<IMapPoint> points)
     {
         this.points = points;
-        this.invalidate();
     }
 
     @Override

@@ -13,7 +13,8 @@ import java.util.ArrayList;
 /**
  * Created by Maksim on 17.02.2016.
  */
-public class MapModel {
+public class MapModel
+{
     private final int screenWidth;
     private final int screenHeight;
     private IMapSource mapSource;
@@ -28,6 +29,29 @@ public class MapModel {
 
     public static Location leftTopMapLocation;
     public static Location rightBottomLocation;
+    private ArrayList<IMapPoint> points;
+
+    public void setMapPoints(ArrayList<IMapPoint> points)
+    {
+        this.points = points;
+    }
+
+    public ArrayList<IMapPoint> getVisiblePoints()
+    {
+        if (this.points == null)
+            return null;
+
+        ArrayList<IMapPoint> visiblePoints = new ArrayList<IMapPoint>(this.points.size());
+
+        for (IMapPoint mapPoint : this.points)
+        {
+            IMapPoint pointClone = (IMapPoint) mapPoint.clone();
+            if (!this.convertPointToScreenCoord(pointClone))
+                continue;
+            visiblePoints.add(pointClone);
+        }
+        return visiblePoints;
+    }
 
 
     public boolean convertPointToScreenCoord(IMapPoint point)
@@ -45,39 +69,48 @@ public class MapModel {
         return true;
     }
 
-    public int getCurrentWidth() {
+    public int getCurrentWidth()
+    {
         return currentWidth;
     }
 
-    public int getCurrentHeight() {
+    public int getCurrentHeight()
+    {
         return currentHeight;
     }
 
-    public void setCurrentLeft(int left) {
+    public void setCurrentLeft(int left)
+    {
         currentLeft = left < 0 ? 0 : left + currentWidth > mapWidth ? mapWidth - currentWidth : left;
     }
 
-    public void setCurrentTop(int top) {
+    public void setCurrentTop(int top)
+    {
         currentTop = top < 0 ? 0 : top + currentHeight > mapHeight ? mapHeight - currentHeight : top;
     }
 
-    public void setCurrentWidth(int width) {
+    public void setCurrentWidth(int width)
+    {
         currentWidth = width < 10 ? 10 : width > mapWidth ? mapWidth : width;
     }
 
-    public void setCurrentHeight(int height) {
+    public void setCurrentHeight(int height)
+    {
         currentHeight = height < 10 ? 10 : height > mapHeight ? mapHeight : height;
     }
 
-    public int getCurrentTop() {
+    public int getCurrentTop()
+    {
         return currentTop;
     }
 
-    public int getCurrentLeft() {
+    public int getCurrentLeft()
+    {
         return currentLeft;
     }
 
-    public MapModel(int _screenWidth, int _screenHeight, IMapSource mapSource) {
+    public MapModel(int _screenWidth, int _screenHeight, IMapSource mapSource)
+    {
         screenWidth = _screenWidth;
         screenHeight = _screenHeight;
         this.mapSource = mapSource;
@@ -96,14 +129,18 @@ public class MapModel {
         rightBottomLocation.setLatitude(53.557886);
     }
 
-    public boolean isPointInCurrentMapRect(IMapPoint point) {
+    public boolean isPointInCurrentMapRect(IMapPoint point)
+    {
         return point.getXY().x >= currentLeft ? point.getXY().y >= currentTop ? point.getXY().x <= currentLeft + currentWidth ? point.getXY().y <= currentTop + currentHeight ? true : false : false : false : false;
     }
 
-    public Bitmap getMap(boolean isBad) {
-        if (isBad) {
+    public Bitmap getMap(boolean isBad)
+    {
+        if (isBad)
+        {
             return mapSource.getBadMap(new Rect(currentLeft, currentTop, currentLeft + currentWidth, currentTop + currentHeight), screenWidth, screenHeight);
-        } else {
+        } else
+        {
             return mapSource.getMap(new Rect(currentLeft, currentTop, currentLeft + currentWidth, currentTop + currentHeight), screenWidth, screenHeight);
         }
     }
