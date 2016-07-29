@@ -12,7 +12,6 @@ import android.widget.Button;
 import com.menshikov.maksim.izhtransport.Sources.TransportTestSource;
 import com.menshikov.maksim.izhtransport.Transport.TransportFetcher;
 import com.menshikov.maksim.izhtransport.Transport.TransportParser;
-import com.menshikov.maksim.izhtransport.map.IMapPoint;
 import com.menshikov.maksim.izhtransport.map.MapPresenter;
 import com.menshikov.maksim.izhtransport.map.MapView;
 import com.menshikov.maksim.izhtransport.map.ResourceMapSource;

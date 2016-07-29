@@ -1,13 +1,7 @@
 package com.menshikov.maksim.izhtransport.Transport;
 
-import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.location.Location;
-import android.os.Handler;
-
-import com.menshikov.maksim.izhtransport.BusMapPoint;
-import com.menshikov.maksim.izhtransport.map.IMapPoint;
-import com.menshikov.maksim.izhtransport.map.PointConverter;
+import com.menshikov.maksim.izhtransport.map.CoordHelper;
+import com.menshikov.maksim.izhtransport.map.MapPoint;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -19,11 +13,11 @@ import rx.Subscriber;
 /**
  * Created by Maksim on 22.07.2016.
  */
-public class TransportFetcher implements Observable.OnSubscribe<ArrayList<IMapPoint>>
+public class TransportFetcher implements Observable.OnSubscribe<ArrayList<MapPoint>>
 {
 
     private TransportParser transportParser;
-    private Subscriber<? super ArrayList<IMapPoint>> subscriber;
+    private Subscriber<? super ArrayList<MapPoint>> subscriber;
     private long updateInterval = 1000;
 
     private Timer timer = new Timer();
@@ -34,7 +28,7 @@ public class TransportFetcher implements Observable.OnSubscribe<ArrayList<IMapPo
     }
 
     @Override
-    public void call(Subscriber<? super ArrayList<IMapPoint>> subscriberPar)
+    public void call(Subscriber<? super ArrayList<MapPoint>> subscriberPar)
     {
         if (this.subscriber == null)
         {
@@ -53,14 +47,10 @@ public class TransportFetcher implements Observable.OnSubscribe<ArrayList<IMapPo
 
         try
         {
-            ArrayList<Location> locations = transportParser.getTransportPositions(0, 0);
-            ArrayList<IMapPoint> mapPoints = new ArrayList<IMapPoint>();
-            for (int i = 0; i < locations.size(); i++)
-            {
-                BusMapPoint busPoint = new BusMapPoint();
-                PointConverter.convertToMapPoint(locations.get(i), busPoint);
-                mapPoints.add(busPoint);
-            }
+            ArrayList<MapPoint> mapPoints = transportParser.getTransportPositions(0, 0);
+            for (MapPoint mapPoint : mapPoints)
+                CoordHelper.addMapPointCoords(mapPoint);
+
             this.subscriber.onNext(mapPoints);
         } catch (InterruptedException e)
         {

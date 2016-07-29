@@ -6,18 +6,18 @@ import android.location.Location;
 /**
  * Created by Maksim on 22.07.2016.
  */
-public class PointConverter
+public class CoordHelper
 {
-    private PointConverter()
+    private CoordHelper()
     {}
 
     private static float LocationToMapKoeffX = (float) Math.abs((MapModel.rightBottomLocation.getLatitude() - MapModel.leftTopMapLocation.getLatitude()) /MapModel.mapWidth);
     private static float LocationToMapKoeffY = (float) Math.abs((MapModel.rightBottomLocation.getLongitude() - MapModel.leftTopMapLocation.getLongitude()) / MapModel.mapHeight);
 
-    public static void convertToMapPoint(Location location, IMapPoint point)
+    public static void addMapPointCoords(MapPoint point)
     {
-        float dx = ((float) (location.getLatitude() - MapModel.leftTopMapLocation.getLatitude()));
-        float dy = -(float) (location.getLongitude() - MapModel.leftTopMapLocation.getLongitude());
+        float dx = ((float) (point.getGeoLocation().getLatitude() - MapModel.leftTopMapLocation.getLatitude()));
+        float dy = -(float) (point.getGeoLocation().getLongitude() - MapModel.leftTopMapLocation.getLongitude());
         point.setXY(new Point(Math.round(dx / LocationToMapKoeffX), Math.round(dy / LocationToMapKoeffY)));
     }
 }

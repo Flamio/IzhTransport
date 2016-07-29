@@ -11,7 +11,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.menshikov.maksim.izhtransport.map.IMapMoveListener;
-import com.menshikov.maksim.izhtransport.map.IMapPoint;
 import com.menshikov.maksim.izhtransport.map.IMapView;
 
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class MapView extends View implements View.OnTouchListener, IMapView
     private float beginX;
     private float beginY;
     private float beginGestureLine;
-    private ArrayList<IMapPoint> points;
+    private ArrayList<MapPoint> points;
     private int xMap = 0;
     private int yMap = 0;
     private boolean isDrawMovingPoints = true;
@@ -173,7 +172,7 @@ public class MapView extends View implements View.OnTouchListener, IMapView
     }
 
     @Override
-    public void setMapPoints(ArrayList<IMapPoint> points)
+    public void setMapPoints(ArrayList<MapPoint> points)
     {
         this.points = points;
     }

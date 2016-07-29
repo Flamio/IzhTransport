@@ -29,23 +29,23 @@ public class MapModel
 
     public static Location leftTopMapLocation;
     public static Location rightBottomLocation;
-    private ArrayList<IMapPoint> points;
+    private ArrayList<MapPoint> points;
 
-    public void setMapPoints(ArrayList<IMapPoint> points)
+    public void setMapPoints(ArrayList<MapPoint> points)
     {
         this.points = points;
     }
 
-    public ArrayList<IMapPoint> getVisiblePoints()
+    public ArrayList<MapPoint> getVisiblePoints()
     {
         if (this.points == null)
             return null;
 
-        ArrayList<IMapPoint> visiblePoints = new ArrayList<IMapPoint>(this.points.size());
+        ArrayList<MapPoint> visiblePoints = new ArrayList<MapPoint>(this.points.size());
 
-        for (IMapPoint mapPoint : this.points)
+        for (MapPoint mapPoint : this.points)
         {
-            IMapPoint pointClone = (IMapPoint) mapPoint.clone();
+            MapPoint pointClone = (MapPoint) mapPoint.clone();
             if (!this.convertPointToScreenCoord(pointClone))
                 continue;
             visiblePoints.add(pointClone);
@@ -54,7 +54,7 @@ public class MapModel
     }
 
 
-    public boolean convertPointToScreenCoord(IMapPoint point)
+    public boolean convertPointToScreenCoord(MapPoint point)
     {
         if (!this.isPointInCurrentMapRect(point))
             return false;
@@ -129,7 +129,7 @@ public class MapModel
         rightBottomLocation.setLatitude(53.557886);
     }
 
-    public boolean isPointInCurrentMapRect(IMapPoint point)
+    public boolean isPointInCurrentMapRect(MapPoint point)
     {
         return point.getXY().x >= currentLeft ? point.getXY().y >= currentTop ? point.getXY().x <= currentLeft + currentWidth ? point.getXY().y <= currentTop + currentHeight ? true : false : false : false : false;
     }

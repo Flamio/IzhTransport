@@ -3,6 +3,7 @@ package com.menshikov.maksim.izhtransport.Transport;
 import android.location.Location;
 
 import com.menshikov.maksim.izhtransport.Sources.ITransportInfoSource;
+import com.menshikov.maksim.izhtransport.map.MapPoint;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -24,9 +25,9 @@ public class TransportParser
     }
 
     // TODO сделать чтобы возвращал IMapPoint
-    public ArrayList<Location> getTransportPositions(int idTransport, int number) throws InterruptedException
+    public ArrayList<MapPoint> getTransportPositions(int idTransport, int number) throws InterruptedException
     {
-        ArrayList<Location> locations = new ArrayList<Location>();
+        ArrayList<MapPoint> transportPoints = new ArrayList<MapPoint>();
 
         source.setTransportParameters(idTransport, number);
         String response = source.getServerResponse();
@@ -41,6 +42,20 @@ public class TransportParser
 
         for (String placemark : placemarks)
         {
+            MapPoint transportPoint = null;
+
+            ArrayList<String> typeString = this.getStringByPattern(placemark,"mode:\\s?'\\d'");
+            if (!typeString.isEmpty())
+            {
+                ArrayList<String> type = this.getStringByPattern(typeString.get(0),"\\d");
+                if (!type.isEmpty())
+                {
+                    transportPoint = TransportFactory.createTransportPoint(Integer.parseInt(type.get(0)));
+                    if (transportPoint == null)
+                        continue;
+                }
+            }
+
             ArrayList<String> locationsString = this.getStringByPattern(placemark,"[0-9]{2}\\.[0-9]{1,4}, [0-9]{2}\\.[0-9]{1,4}");
             if (!locationsString.isEmpty())
             {
@@ -50,12 +65,13 @@ public class TransportParser
                 location.setLongitude(Double.parseDouble(locationsString.get(0).substring(0, del)));
                 String temp = locationsString.get(0).substring(del + 1, locationsString.get(0).length());
                 location.setLatitude(Double.parseDouble(temp));
-                locations.add(location);
-            }
+                transportPoint.setGeoLocation(location);
 
+                transportPoints.add(transportPoint);
+            }
         }
 
-        return locations;
+        return transportPoints;
     }
 
     private ArrayList<String> getStringByPattern(String input, String pattern)

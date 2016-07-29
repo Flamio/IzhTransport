@@ -38,7 +38,7 @@ public class MapPresenter
 
         TransportFetcher transportFetcher = new TransportFetcher(new TransportParser(new TransportTestSource()));
 
-        Observable<ArrayList<IMapPoint>> fetchTransport = Observable.create(transportFetcher);
+        Observable<ArrayList<MapPoint>> fetchTransport = Observable.create(transportFetcher);
 
         mapView.setMapMoveListener(mapMoveListener);
 
@@ -62,14 +62,14 @@ public class MapPresenter
                 mapView.setXYMap(0, 0);
                 mapView.setBitmap(bitmap);
 
-                ArrayList<IMapPoint> points = model.getVisiblePoints();
+                ArrayList<MapPoint> points = model.getVisiblePoints();
                 mapView.setMapPoints(points);
                 mapView.redraw(true);
             }
         });
 
 
-        fetchTransport.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<ArrayList<IMapPoint>>()
+        fetchTransport.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<ArrayList<MapPoint>>()
         {
             @Override
             public void onCompleted()
@@ -84,12 +84,12 @@ public class MapPresenter
             }
 
             @Override
-            public void onNext(ArrayList<IMapPoint> iMapPoints)
+            public void onNext(ArrayList<MapPoint> iMapPoints)
             {
                 if (iMapPoints.isEmpty())
                     return;
                 model.setMapPoints(iMapPoints);
-                ArrayList<IMapPoint> points = model.getVisiblePoints();
+                ArrayList<MapPoint> points = model.getVisiblePoints();
                 mapView.setMapPoints(points);
                 mapView.redraw(true);
             }

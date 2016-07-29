@@ -12,7 +12,7 @@ public interface IMapView
 {
     void setBitmap(Bitmap bitmap);
     void setMapMoveListener(IMapMoveListener mapMoveListener);
-    void setMapPoints(ArrayList<IMapPoint> points);
+    void setMapPoints(ArrayList<MapPoint> points);
     void clearTransportPoints();
     void setXYMap(int x, int y);
     Point getXYMap();
