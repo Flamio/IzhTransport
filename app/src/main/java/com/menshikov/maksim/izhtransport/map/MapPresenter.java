@@ -21,6 +21,7 @@ import rx.schedulers.Schedulers;
 public class MapPresenter
 {
     final private IMapView mapView;
+    final MapModel model;
     private int width;
     private int height;
 
@@ -30,15 +31,11 @@ public class MapPresenter
         this.width = width;
         this.height = height;
 
-        final MapModel model = new MapModel(width, height, new ResourceMapSource(ResourceManager.Instance().getResources()));
+        model = new MapModel(width, height, new ResourceMapSource(ResourceManager.Instance().getResources()));
 
         MapMoveListener mapMoveListener = new MapMoveListener(model, mapView);
 
         Observable<Bitmap> fetchMap = Observable.create(mapMoveListener);
-
-        TransportFetcher transportFetcher = new TransportFetcher(new TransportParser(new TransportTestSource()));
-
-        Observable<ArrayList<MapPoint>> fetchTransport = Observable.create(transportFetcher);
 
         mapView.setMapMoveListener(mapMoveListener);
 
@@ -67,34 +64,16 @@ public class MapPresenter
                 mapView.redraw(true);
             }
         });
+    }
 
-
-        fetchTransport.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<ArrayList<MapPoint>>()
-        {
-            @Override
-            public void onCompleted()
-            {
-
-            }
-
-            @Override
-            public void onError(Throwable e)
-            {
-                Log.e(e.getMessage(), e.getMessage());
-            }
-
-            @Override
-            public void onNext(ArrayList<MapPoint> iMapPoints)
-            {
-                if (iMapPoints.isEmpty())
-                    return;
-                model.setMapPoints(iMapPoints);
-                ArrayList<MapPoint> points = model.getVisiblePoints();
-                mapView.setMapPoints(points);
-                mapView.redraw(true);
-            }
-        });
-
+    public void setMapPoints(ArrayList<MapPoint> mapPoints)
+    {
+        if (mapPoints.isEmpty())
+            return;
+        model.setMapPoints(mapPoints);
+        ArrayList<MapPoint> points = model.getVisiblePoints();
+        mapView.setMapPoints(points);
+        mapView.redraw(true);
     }
 
 }

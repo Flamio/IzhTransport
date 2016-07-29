@@ -9,9 +9,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.menshikov.maksim.izhtransport.Sources.TransportInfoSource;
 import com.menshikov.maksim.izhtransport.Sources.TransportTestSource;
 import com.menshikov.maksim.izhtransport.Transport.TransportFetcher;
 import com.menshikov.maksim.izhtransport.Transport.TransportParser;
+import com.menshikov.maksim.izhtransport.map.MapPoint;
 import com.menshikov.maksim.izhtransport.map.MapPresenter;
 import com.menshikov.maksim.izhtransport.map.MapView;
 import com.menshikov.maksim.izhtransport.map.ResourceMapSource;
@@ -56,7 +58,31 @@ public class MapActivity extends Activity
 
         final IMapView mapView = (MapView) findViewById(R.id.map_view);
 
-        MapPresenter mapPresenter = new MapPresenter(mapView, width, height);
+        final MapPresenter mapPresenter = new MapPresenter(mapView, width, height);
+
+        TransportFetcher transportFetcher = new TransportFetcher(new TransportParser(new TransportInfoSource()));
+        Observable<ArrayList<MapPoint>> fetchTransport = Observable.create(transportFetcher);
+
+        fetchTransport.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<ArrayList<MapPoint>>()
+        {
+            @Override
+            public void onCompleted()
+            {
+
+            }
+
+            @Override
+            public void onError(Throwable e)
+            {
+                Log.e(e.getMessage(), e.getMessage());
+            }
+
+            @Override
+            public void onNext(ArrayList<MapPoint> iMapPoints)
+            {
+                mapPresenter.setMapPoints(iMapPoints);
+            }
+        });
     }
 
 }
