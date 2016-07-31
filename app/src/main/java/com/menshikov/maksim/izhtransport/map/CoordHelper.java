@@ -9,9 +9,10 @@ import android.location.Location;
 public class CoordHelper
 {
     private CoordHelper()
-    {}
+    {
+    }
 
-    private static float LocationToMapKoeffX = (float) Math.abs((MapModel.rightBottomLocation.getLatitude() - MapModel.leftTopMapLocation.getLatitude()) /MapModel.mapWidth);
+    private static float LocationToMapKoeffX = (float) Math.abs((MapModel.rightBottomLocation.getLatitude() - MapModel.leftTopMapLocation.getLatitude()) / MapModel.mapWidth);
     private static float LocationToMapKoeffY = (float) Math.abs((MapModel.rightBottomLocation.getLongitude() - MapModel.leftTopMapLocation.getLongitude()) / MapModel.mapHeight);
 
     public static void addMapPointCoords(MapPoint point)

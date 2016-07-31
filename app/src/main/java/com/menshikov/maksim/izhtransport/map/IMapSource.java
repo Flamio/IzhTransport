@@ -9,8 +9,10 @@ import android.graphics.Rect;
 public interface IMapSource
 {
     int getHeight();
+
     int getWidth();
 
     Bitmap getMap(Rect rect, int screenWidth, int screenHeight);
+
     Bitmap getBadMap(Rect rect, int screenWidth, int screenHeight);
 }

@@ -13,47 +13,36 @@ import rx.Subscriber;
 /**
  * Created by Maksim on 10.07.2016.
  */
-public class MapMoveListener implements IMapMoveListener, Observable.OnSubscribe<Bitmap> {
-    private int updateInterval = 600;
+public class MapMoveListener implements IMapMoveListener, Observable.OnSubscribe<Bitmap>
+{
     private MapModel model;
     private IMapView view;
-    private boolean isTimerRunning = false;
     private Subscriber<? super Bitmap> subscriber = null;
-    final Handler handler = new Handler();
-    private Runnable handlerRunnable = new Runnable() {
-        @Override
-        public void run() {
-            //call(subscriber);
-            //handler.postDelayed(this, updateInterval);
-        }
-    };
 
-    public MapMoveListener(MapModel model, final IMapView view) {
+    public MapMoveListener(MapModel model, final IMapView view)
+    {
         this.model = model;
         this.view = view;
     }
 
     @Override
-    public void onMoving(int dx, int dy) {
+    public void onMoving(int dx, int dy)
+    {
         model.setCurrentLeft(model.getCurrentLeft() + dx);
         model.setCurrentTop(model.getCurrentTop() + dy);
         this.view.setXYMap(this.view.getXYMap().x - dx, this.view.getXYMap().y - dy);
         this.view.redraw(false);
-        /*if (!this.isTimerRunning){
-            handler.postDelayed(handlerRunnable, this.updateInterval);
-            this.isTimerRunning = true;
-        }*/
     }
 
     @Override
-    public void onStopMoving() throws InterruptedException {
-        handler.removeCallbacks(handlerRunnable);
-        this.isTimerRunning = false;
+    public void onStopMoving() throws InterruptedException
+    {
         this.call(this.subscriber);
     }
 
     @Override
-    public void onScaling(boolean increase, int centerX, int centerY) {
+    public void onScaling(boolean increase, int centerX, int centerY)
+    {
 
        /* int newLeftOffset = model.getCurrentWidth() / 100;
         int newTopOffset = model.getCurrentHeight() / 100;
@@ -79,7 +68,8 @@ public class MapMoveListener implements IMapMoveListener, Observable.OnSubscribe
     }
 
     @Override
-    public void call(Subscriber<? super Bitmap> subscriber) {
+    public void call(Subscriber<? super Bitmap> subscriber)
+    {
         if (this.subscriber == null)
             this.subscriber = subscriber;
         Bitmap currentBitmap = model.getMap(false);

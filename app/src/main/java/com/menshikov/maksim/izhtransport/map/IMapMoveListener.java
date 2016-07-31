@@ -7,7 +7,9 @@ import java.io.IOException;
  */
 public interface IMapMoveListener
 {
-    void onMoving(int dx,int dy);
+    void onMoving(int dx, int dy);
+
     void onStopMoving() throws IOException, InterruptedException;
-    void onScaling(boolean increase, int centerX,int centerY);
+
+    void onScaling(boolean increase, int centerX, int centerY);
 }

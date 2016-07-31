@@ -38,7 +38,7 @@ public class ResourceMapSource implements IMapSource
     {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(resources, R.drawable.map,options);
+        BitmapFactory.decodeResource(resources, R.drawable.map, options);
 
         mapHeight = options.outHeight;
         mapWidth = options.outWidth;
@@ -48,11 +48,11 @@ public class ResourceMapSource implements IMapSource
         options.inSampleSize = 5;
         options.inPreferQualityOverSpeed = false;
         options.inPreferredConfig = Bitmap.Config.RGB_565;
-        generalMap = BitmapFactory.decodeResource(resources, R.drawable.map,options);
+        generalMap = BitmapFactory.decodeResource(resources, R.drawable.map, options);
         int width = generalMap.getWidth();
         int height = generalMap.getHeight();
-        kx = (float)mapWidth / (float)width;
-        ky = (float)mapHeight / (float)height;
+        kx = (float) mapWidth / (float) width;
+        ky = (float) mapHeight / (float) height;
     }
 
     private void generateDecoder()
@@ -61,8 +61,7 @@ public class ResourceMapSource implements IMapSource
         {
             InputStream is = resources.openRawResource(+R.drawable.map);
             decoder = BitmapRegionDecoder.newInstance(is, false);
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -89,13 +88,13 @@ public class ResourceMapSource implements IMapSource
         options.inPreferQualityOverSpeed = false;
         options.inPreferredConfig = Bitmap.Config.RGB_565;
         bitmap = decoder.decodeRegion(rect, options);
-        return Bitmap.createScaledBitmap(bitmap,screenWidth,screenHeight,false);
+        return Bitmap.createScaledBitmap(bitmap, screenWidth, screenHeight, false);
     }
 
     @Override
     public Bitmap getBadMap(Rect rect, int screenWidth, int screenHeight)
     {
         bitmap = Bitmap.createBitmap(generalMap, (int) (rect.left / kx), (int) (rect.top / ky), (int) (rect.width() / kx), (int) (rect.height() / ky));
-        return Bitmap.createScaledBitmap(bitmap,screenWidth,screenHeight,false);
+        return Bitmap.createScaledBitmap(bitmap, screenWidth, screenHeight, false);
     }
 }
