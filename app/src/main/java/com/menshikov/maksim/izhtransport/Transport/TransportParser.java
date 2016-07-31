@@ -4,6 +4,7 @@ import android.location.Location;
 
 import com.menshikov.maksim.izhtransport.Sources.ITransportInfoSource;
 import com.menshikov.maksim.izhtransport.map.MapPoint;
+import com.menshikov.maksim.izhtransport.map.MoveableMapPoint;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ public class TransportParser
         this.source = source;
     }
 
-    // TODO сделать чтобы возвращал IMapPoint
     public ArrayList<MapPoint> getTransportPositions(int idTransport, int number) throws InterruptedException, IOException
     {
         ArrayList<MapPoint> transportPoints = new ArrayList<MapPoint>();
@@ -35,7 +35,7 @@ public class TransportParser
         if (response == null)
             throw new IOException();
 
-        ArrayList<String> placemarks = this.getStringByPattern(response,"(?<=myPlacemark = )[\\s\\S]+?(?=doc_layers)");
+        ArrayList<String> placemarks = this.getStringByPattern(response, "(?<=myPlacemark = )[\\s\\S]+?(?=doc_layers)");
         if (placemarks.isEmpty())
             return null;
 
@@ -43,10 +43,10 @@ public class TransportParser
         {
             MapPoint transportPoint = null;
 
-            ArrayList<String> typeString = this.getStringByPattern(placemark,"mode:\\s?'\\d'");
+            ArrayList<String> typeString = this.getStringByPattern(placemark, "mode:\\s?'\\d'");
             if (!typeString.isEmpty())
             {
-                ArrayList<String> type = this.getStringByPattern(typeString.get(0),"\\d");
+                ArrayList<String> type = this.getStringByPattern(typeString.get(0), "\\d");
                 if (!type.isEmpty())
                 {
                     transportPoint = TransportFactory.createTransportPoint(Integer.parseInt(type.get(0)));
@@ -55,7 +55,7 @@ public class TransportParser
                 }
             }
 
-            ArrayList<String> locationsString = this.getStringByPattern(placemark,"[0-9]{2}\\.[0-9]{1,4}, [0-9]{2}\\.[0-9]{1,4}");
+            ArrayList<String> locationsString = this.getStringByPattern(placemark, "[0-9]{2}\\.[0-9]{1,4}, [0-9]{2}\\.[0-9]{1,4}");
             if (!locationsString.isEmpty())
             {
                 Location location = new Location("izh");
@@ -66,8 +66,22 @@ public class TransportParser
                 location.setLatitude(Double.parseDouble(temp));
                 transportPoint.setGeoLocation(location);
 
-                transportPoints.add(transportPoint);
             }
+
+            ArrayList<String> directionPngStrings = this.getStringByPattern(placemark, "\\d*\\.png");
+            if (directionPngStrings.isEmpty())
+                continue;
+
+            String directionPngString = directionPngStrings.get(0);
+
+            ArrayList<String> directionStrings = this.getStringByPattern(directionPngString, "\\d{1,3}");
+            if (directionStrings.isEmpty())
+                continue;
+            String directionString = directionStrings.get(0);
+            ((MoveableMapPoint) transportPoint).setDegreeDirection(Float.parseFloat(directionString));
+
+            if (transportPoint != null)
+                transportPoints.add(transportPoint);
         }
 
         return transportPoints;

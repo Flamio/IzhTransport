@@ -11,30 +11,24 @@ import android.location.Location;
 
 import com.menshikov.maksim.izhtransport.R;
 import com.menshikov.maksim.izhtransport.map.ICloneable;
-import com.menshikov.maksim.izhtransport.map.MapPoint;
+import com.menshikov.maksim.izhtransport.map.MoveableMapPoint;
 
 /**
  * Created by Maksim on 29.07.2016.
  */
-public class TramMapPoint extends MapPoint
+public class TramMapPoint extends MoveableMapPoint
 {
-    public TramMapPoint(Resources resources)
-    {
-        super(resources);
-    }
 
-    @Override
-    public void draw(Canvas canvas)
+
+    public TramMapPoint(Bitmap bitmap, Bitmap directionIcon)
     {
-        Bitmap icon = BitmapFactory.decodeResource(resources, R.drawable.tram);
-        Rect drawingRect = new Rect(this.point.x - 10, this.point.y - 10, this.point.x + 10, this.point.y + 10);
-        canvas.drawBitmap(icon, new Rect(0, 0, 128, 128), drawingRect, null);
+        super(bitmap, directionIcon);
     }
 
     @Override
     public ICloneable clone()
     {
-        TramMapPoint clonePoint = new TramMapPoint(this.resources);
+        TramMapPoint clonePoint = new TramMapPoint(this.bitmap, this.directionIcon);
         clonePoint.setXY(new Point(this.getXY()));
 
         Location cloneLocation = new Location("izh");

@@ -1,5 +1,9 @@
 package com.menshikov.maksim.izhtransport.Transport;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import com.menshikov.maksim.izhtransport.R;
 import com.menshikov.maksim.izhtransport.ResourceManager;
 import com.menshikov.maksim.izhtransport.map.MapPoint;
 
@@ -8,16 +12,21 @@ import com.menshikov.maksim.izhtransport.map.MapPoint;
  */
 public class TransportFactory
 {
+    public static Bitmap busIcon =  BitmapFactory.decodeResource(ResourceManager.Instance().getResources(), R.drawable.bus);
+    public static Bitmap trolleyIcon =  BitmapFactory.decodeResource(ResourceManager.Instance().getResources(), R.drawable.trolleybus);
+    public static Bitmap tramIcon =  BitmapFactory.decodeResource(ResourceManager.Instance().getResources(), R.drawable.tram);
+    public static Bitmap directionIcon =  BitmapFactory.decodeResource(ResourceManager.Instance().getResources(), R.drawable.arrow);
+
     public static MapPoint createTransportPoint(int id)
     {
         switch (id)
         {
             case 1:
-                return new BusMapPoint(ResourceManager.Instance().getResources());
+                return new BusMapPoint(busIcon,directionIcon);
             case 2:
-                return new TrolleyMapPoint(ResourceManager.Instance().getResources());
+                return new TrolleyMapPoint(trolleyIcon,directionIcon);
             case 4:
-                return new TramMapPoint(ResourceManager.Instance().getResources());
+                return new TramMapPoint(tramIcon,directionIcon);
         }
 
         return null;

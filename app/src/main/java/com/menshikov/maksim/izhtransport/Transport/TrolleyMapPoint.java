@@ -10,32 +10,22 @@ import android.location.Location;
 
 import com.menshikov.maksim.izhtransport.R;
 import com.menshikov.maksim.izhtransport.map.ICloneable;
-import com.menshikov.maksim.izhtransport.map.MapPoint;
-
-import java.util.Map;
+import com.menshikov.maksim.izhtransport.map.MoveableMapPoint;
 
 /**
  * Created by Maksim on 29.07.2016.
  */
-public class TrolleyMapPoint extends MapPoint
+public class TrolleyMapPoint extends MoveableMapPoint
 {
-    public TrolleyMapPoint(Resources resources)
+    public TrolleyMapPoint(Bitmap bitmap, Bitmap directionIcon)
     {
-        super(resources);
-    }
-
-    @Override
-    public void draw(Canvas canvas)
-    {
-        Bitmap icon = BitmapFactory.decodeResource(resources, R.drawable.trolleybus);
-        Rect drawingRect = new Rect(this.point.x - 10, this.point.y - 10, this.point.x + 10, this.point.y + 10);
-        canvas.drawBitmap(icon, new Rect(0, 0, 128, 128), drawingRect, null);
+        super(bitmap, directionIcon);
     }
 
     @Override
     public ICloneable clone()
     {
-        TrolleyMapPoint clonePoint = new TrolleyMapPoint(this.resources);
+        TrolleyMapPoint clonePoint = new TrolleyMapPoint(this.bitmap, this.directionIcon);
         clonePoint.setXY(new Point(this.getXY()));
 
         Location cloneLocation = new Location("izh");

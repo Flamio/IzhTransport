@@ -1,6 +1,5 @@
 package com.menshikov.maksim.izhtransport.map;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,21 +8,20 @@ import android.graphics.Rect;
 import android.location.Location;
 
 import com.menshikov.maksim.izhtransport.R;
-import com.menshikov.maksim.izhtransport.ResourceManager;
 
 /**
  * Created by Maksim on 22.07.2016.
  */
 public abstract class MapPoint implements ICloneable
 {
-    protected final Resources resources;
+    protected final Bitmap bitmap;
 
     protected Point point;
     protected Location location;
 
-    public MapPoint(Resources resources)
+    public MapPoint(Bitmap resources)
     {
-        this.resources = resources;
+        this.bitmap = resources;
     }
 
     public void setXY(Point point)
@@ -47,7 +45,11 @@ public abstract class MapPoint implements ICloneable
         return this.location;
     }
 
-    abstract public void draw(Canvas canvas);
+    public void draw(Canvas canvas)
+    {
+        Rect drawingRect = new Rect(this.point.x - 10, this.point.y - 10, this.point.x + 10, this.point.y + 10);
+        canvas.drawBitmap(this.bitmap, new Rect(0, 0, 128, 128), drawingRect, null);
+    }
 
     abstract public ICloneable clone();
 }
