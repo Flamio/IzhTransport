@@ -21,18 +21,16 @@ abstract public class MoveableMapPoint extends MapPoint
         matrix.preRotate(degrees);
 
         Bitmap rotatedBitmap = Bitmap.createBitmap(original, 0, 0, width, height, matrix, true);
-        Canvas canvas = new Canvas(rotatedBitmap);
-        canvas.drawBitmap(original, 5.0f, 0.0f, null);
 
         return rotatedBitmap;
     }
 
-    public float getDegreeDirection()
+    private float direction;
+
+    protected float getDegreeDirection()
     {
         return this.direction;
     }
-
-    private float direction;
 
     public void setDegreeDirection(float direction)
     {
@@ -50,8 +48,8 @@ abstract public class MoveableMapPoint extends MapPoint
     {
         super.draw(canvas);
 
-        Bitmap rotatedDirectionIcon = this.rotateBitmap(this.directionIcon, this.getDegreeDirection());
-        Rect drawingIconRect = new Rect(this.point.x - 10, this.point.y - 20, this.point.x + 10, this.point.y);
+        Bitmap rotatedDirectionIcon = this.rotateBitmap(this.directionIcon, this.direction);
+        Rect drawingIconRect = new Rect(this.point.x - 20, this.point.y - 20, this.point.x + 20, this.point.y+20);
         canvas.drawBitmap(rotatedDirectionIcon, new Rect(0, 0, 128, 128), drawingIconRect, null);
     }
 

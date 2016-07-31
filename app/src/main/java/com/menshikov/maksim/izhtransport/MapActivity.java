@@ -17,6 +17,7 @@ import com.menshikov.maksim.izhtransport.Transport.TransportParser;
 import com.menshikov.maksim.izhtransport.map.MapPoint;
 import com.menshikov.maksim.izhtransport.map.MapPresenter;
 import com.menshikov.maksim.izhtransport.map.MapView;
+import com.menshikov.maksim.izhtransport.map.MoveableMapPoint;
 import com.menshikov.maksim.izhtransport.map.ResourceMapSource;
 import com.menshikov.maksim.izhtransport.map.IMapView;
 import com.menshikov.maksim.izhtransport.map.MapModel;

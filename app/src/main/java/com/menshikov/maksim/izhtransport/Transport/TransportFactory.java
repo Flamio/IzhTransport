@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import com.menshikov.maksim.izhtransport.R;
 import com.menshikov.maksim.izhtransport.ResourceManager;
 import com.menshikov.maksim.izhtransport.map.MapPoint;
+import com.menshikov.maksim.izhtransport.map.MoveableMapPoint;
 
 /**
  * Created by Maksim on 29.07.2016.
@@ -17,7 +18,7 @@ public class TransportFactory
     public static Bitmap tramIcon =  BitmapFactory.decodeResource(ResourceManager.Instance().getResources(), R.drawable.tram);
     public static Bitmap directionIcon =  BitmapFactory.decodeResource(ResourceManager.Instance().getResources(), R.drawable.arrow);
 
-    public static MapPoint createTransportPoint(int id)
+    public static MoveableMapPoint createTransportPoint(int id)
     {
         switch (id)
         {

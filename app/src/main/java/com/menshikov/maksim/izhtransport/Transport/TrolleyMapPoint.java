@@ -27,7 +27,7 @@ public class TrolleyMapPoint extends MoveableMapPoint
     {
         TrolleyMapPoint clonePoint = new TrolleyMapPoint(this.bitmap, this.directionIcon);
         clonePoint.setXY(new Point(this.getXY()));
-
+        clonePoint.setDegreeDirection(this.getDegreeDirection());
         Location cloneLocation = new Location("izh");
         cloneLocation.setLatitude(this.getGeoLocation().getLatitude());
         cloneLocation.setLongitude(this.getGeoLocation().getLongitude());

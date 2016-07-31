@@ -8,6 +8,7 @@ import com.menshikov.maksim.izhtransport.map.MoveableMapPoint;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,7 +42,7 @@ public class TransportParser
 
         for (String placemark : placemarks)
         {
-            MapPoint transportPoint = null;
+            MoveableMapPoint transportPoint = null;
 
             ArrayList<String> typeString = this.getStringByPattern(placemark, "mode:\\s?'\\d'");
             if (!typeString.isEmpty())
@@ -78,7 +79,7 @@ public class TransportParser
             if (directionStrings.isEmpty())
                 continue;
             String directionString = directionStrings.get(0);
-            ((MoveableMapPoint) transportPoint).setDegreeDirection(Float.parseFloat(directionString));
+            transportPoint.setDegreeDirection(Float.parseFloat(directionString));
 
             if (transportPoint != null)
                 transportPoints.add(transportPoint);

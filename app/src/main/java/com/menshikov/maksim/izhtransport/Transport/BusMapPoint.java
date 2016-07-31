@@ -26,6 +26,7 @@ public class BusMapPoint extends MoveableMapPoint
     {
         BusMapPoint clonePoint = new BusMapPoint(this.bitmap,this.directionIcon);
         clonePoint.setXY(new Point(this.getXY()));
+        clonePoint.setDegreeDirection(this.getDegreeDirection());
 
         Location cloneLocation = new Location("izh");
         cloneLocation.setLatitude(this.getGeoLocation().getLatitude());

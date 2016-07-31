@@ -30,6 +30,7 @@ public class TramMapPoint extends MoveableMapPoint
     {
         TramMapPoint clonePoint = new TramMapPoint(this.bitmap, this.directionIcon);
         clonePoint.setXY(new Point(this.getXY()));
+        clonePoint.setDegreeDirection(this.getDegreeDirection());
 
         Location cloneLocation = new Location("izh");
         cloneLocation.setLatitude(this.getGeoLocation().getLatitude());

@@ -2,9 +2,11 @@ package com.menshikov.maksim.izhtransport.Transport;
 
 import com.menshikov.maksim.izhtransport.map.CoordHelper;
 import com.menshikov.maksim.izhtransport.map.MapPoint;
+import com.menshikov.maksim.izhtransport.map.MoveableMapPoint;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
