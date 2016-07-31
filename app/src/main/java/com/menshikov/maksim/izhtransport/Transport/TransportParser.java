@@ -5,6 +5,7 @@ import android.location.Location;
 import com.menshikov.maksim.izhtransport.Sources.ITransportInfoSource;
 import com.menshikov.maksim.izhtransport.map.MapPoint;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,16 +26,14 @@ public class TransportParser
     }
 
     // TODO сделать чтобы возвращал IMapPoint
-    public ArrayList<MapPoint> getTransportPositions(int idTransport, int number) throws InterruptedException
+    public ArrayList<MapPoint> getTransportPositions(int idTransport, int number) throws InterruptedException, IOException
     {
         ArrayList<MapPoint> transportPoints = new ArrayList<MapPoint>();
 
         source.setTransportParameters(idTransport, number);
         String response = source.getServerResponse();
         if (response == null)
-        {
-            return null;
-        }
+            throw new IOException();
 
         ArrayList<String> placemarks = this.getStringByPattern(response,"(?<=myPlacemark = )[\\s\\S]+?(?=doc_layers)");
         if (placemarks.isEmpty())

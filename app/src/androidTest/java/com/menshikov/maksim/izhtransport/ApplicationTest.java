@@ -13,6 +13,7 @@ import com.menshikov.maksim.izhtransport.Transport.TransportParser;
 import com.menshikov.maksim.izhtransport.map.IMapSource;
 import com.menshikov.maksim.izhtransport.map.MapModel;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -32,7 +33,7 @@ public class ApplicationTest extends ApplicationTestCase<Application>
         super.setUp();
     }
 
-    public void testTransportParser()
+    public void testTransportParser() throws IOException, InterruptedException
     {
         TransportParser tp = new TransportParser(new ITransportInfoSource() {
             @Override

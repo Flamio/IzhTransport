@@ -3,6 +3,7 @@ package com.menshikov.maksim.izhtransport.Transport;
 import com.menshikov.maksim.izhtransport.map.CoordHelper;
 import com.menshikov.maksim.izhtransport.map.MapPoint;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -18,7 +19,7 @@ public class TransportFetcher implements Observable.OnSubscribe<ArrayList<MapPoi
 
     private TransportParser transportParser;
     private Subscriber<? super ArrayList<MapPoint>> subscriber;
-    private long updateInterval = 1000;
+    private long updateInterval = 5000;
 
     private Timer timer = new Timer();
 
@@ -55,6 +56,10 @@ public class TransportFetcher implements Observable.OnSubscribe<ArrayList<MapPoi
         } catch (InterruptedException e)
         {
             e.printStackTrace();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+            this.subscriber.onNext(null);
         }
     }
 }

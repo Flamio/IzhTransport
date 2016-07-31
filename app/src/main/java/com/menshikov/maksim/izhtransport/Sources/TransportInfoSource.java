@@ -18,6 +18,8 @@ public class TransportInfoSource implements ITransportInfoSource {
     }
 
     private String convertStreamToString(InputStream is, String encoding) throws IOException {
+        if (is == null)
+            throw new IOException();
         StringBuilder sb = new StringBuilder(Math.max(16, is.available()));
         char[] tmp = new char[4096];
 

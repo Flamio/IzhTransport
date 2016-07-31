@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.menshikov.maksim.izhtransport.Sources.TransportInfoSource;
 import com.menshikov.maksim.izhtransport.Sources.TransportTestSource;
@@ -65,6 +66,8 @@ public class MapActivity extends Activity
 
         fetchTransport.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<ArrayList<MapPoint>>()
         {
+            private Toast toast = Toast.makeText(MapActivity.this, "Не удалось получить данные о транспорте", Toast.LENGTH_SHORT);
+
             @Override
             public void onCompleted()
             {
@@ -74,12 +77,16 @@ public class MapActivity extends Activity
             @Override
             public void onError(Throwable e)
             {
-                Log.e(e.getMessage(), e.getMessage());
             }
 
             @Override
             public void onNext(ArrayList<MapPoint> iMapPoints)
             {
+                if (iMapPoints == null)
+                {
+                    this.toast.show();
+                    return;
+                }
                 mapPresenter.setMapPoints(iMapPoints);
             }
         });
