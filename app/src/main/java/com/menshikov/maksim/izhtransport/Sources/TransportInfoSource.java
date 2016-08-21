@@ -38,8 +38,8 @@ public class TransportInfoSource implements ITransportInfoSource {
         final String[] response = new String[1];
         URL url = null;
         try {
-            //url = new URL("http://map.igis.ru/layers/?param=filter=field_reys_nom,=,2*filter=IMode,=,2&id=215&editor=0&reload=1&&rnd=4719");
-            url = new URL("http://map.igis.ru/layers/?param=filter=&id=215&editor=0&reload=1&&rnd=4719");
+            url = new URL("http://map.igis.ru/layers/?param=filter=field_reys_nom,=,2*filter=IMode,=,2&id=215&editor=0&reload=1&&rnd=4719");
+            //url = new URL("http://map.igis.ru/layers/?param=filter=&id=215&editor=0&reload=1&&rnd=4719");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
