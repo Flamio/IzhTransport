@@ -50,13 +50,13 @@ abstract public class MoveableMapPoint extends MapPoint
 
         Bitmap rotatedDirectionIcon = this.rotateBitmap(this.directionIcon, this.direction);
         Rect drawingIconRect = null;
-        if (this.direction > 0 && this.direction <= 45 || this.direction > 315)
+        if (this.direction >= 0 && this.direction <= 45 || this.direction > 315)
             drawingIconRect = new Rect(this.point.x - 10, this.point.y - 30, this.point.x + 10, this.point.y-10);
         if (this.direction > 45 && this.direction <= 135)
             drawingIconRect = new Rect(this.point.x + 10, this.point.y - 10, this.point.x + 30, this.point.y+10);
         if (this.direction > 135 && this.direction <= 225)
             drawingIconRect = new Rect(this.point.x - 10, this.point.y + 10, this.point.x + 10, this.point.y+30);
-        if (this.direction > 225 && this.direction <= 315)
+        if (this.direction > 225)
             drawingIconRect = new Rect(this.point.x - 30, this.point.y - 10, this.point.x - 10, this.point.y + 10);
 
         canvas.drawBitmap(rotatedDirectionIcon, new Rect(0, 0, 128, 128), drawingIconRect, null);

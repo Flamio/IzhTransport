@@ -12,7 +12,8 @@ import java.util.List;
  * Created by Maksim on 21.08.2016.
  */
 
-public class DatabaseAccess {
+public class DatabaseAccess
+{
     private SQLiteOpenHelper openHelper;
     private SQLiteDatabase database;
     private static DatabaseAccess instance;
@@ -22,7 +23,8 @@ public class DatabaseAccess {
      *
      * @param context
      */
-    private DatabaseAccess(Context context) {
+    private DatabaseAccess(Context context)
+    {
         this.openHelper = new DatabaseOpenHelper(context);
     }
 
@@ -32,8 +34,10 @@ public class DatabaseAccess {
      * @param context the Context
      * @return the instance of DabaseAccess
      */
-    public static DatabaseAccess getInstance(Context context) {
-        if (instance == null) {
+    public static DatabaseAccess getInstance(Context context)
+    {
+        if (instance == null)
+        {
             instance = new DatabaseAccess(context);
         }
         return instance;
@@ -42,25 +46,44 @@ public class DatabaseAccess {
     /**
      * Open the database connection.
      */
-    public void open() {
+    public void open()
+    {
         this.database = openHelper.getWritableDatabase();
     }
 
     /**
      * Close the database connection.
      */
-    public void close() {
-        if (database != null) {
+    public void close()
+    {
+        if (database != null)
+        {
             this.database.close();
         }
     }
 
-    public List<String> getAllTransportTypes() {
-        List<String> list = new ArrayList<>();
+    public List<ListItem> getAllTransportTypes()
+    {
+        List<ListItem> list = new ArrayList<>();
         Cursor cursor = database.rawQuery("SELECT * FROM TransportType", null);
         cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            list.add(cursor.getString(1));
+        while (!cursor.isAfterLast())
+        {
+            list.add(new ListItem(Integer.parseInt(cursor.getString(2)), cursor.getString(1)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return list;
+    }
+
+    public List<ListItem> getTransportNumbers(int transportType)
+    {
+        List<ListItem> list = new ArrayList<>();
+        Cursor cursor = database.rawQuery("select Number, Id  from Transport  where TypeId ==  " + transportType, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast())
+        {
+            list.add(new ListItem(Integer.parseInt(cursor.getString(1)), cursor.getString(0)));
             cursor.moveToNext();
         }
         cursor.close();

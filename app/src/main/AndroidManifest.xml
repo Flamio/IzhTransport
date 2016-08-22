@@ -22,6 +22,10 @@
             android:name=".SelectTransportActivity"
             android:label="@string/title_activity_select_transport" >
         </activity>
+        <activity
+            android:name=".SelectTransportNumberActivity"
+            android:label="@string/title_activity_number_select_transport" >
+        </activity>
     </application>
 
 </manifest>
