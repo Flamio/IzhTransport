@@ -10,64 +10,80 @@ import java.net.URL;
 /**
  * Created by Maksim on 22.03.2016.
  */
-public class TransportInfoSource implements ITransportInfoSource {
+public class TransportInfoSource implements ITransportInfoSource
+{
+
+    private int transportId;
+    private int number;
+
     @Override
     public void setTransportParameters(int transportId, int number)
     {
-
+        this.transportId = transportId;
+        this.number = number;
     }
 
-    private String convertStreamToString(InputStream is, String encoding) throws IOException {
+    private String convertStreamToString(InputStream is, String encoding) throws IOException
+    {
         if (is == null)
             throw new IOException();
         StringBuilder sb = new StringBuilder(Math.max(16, is.available()));
         char[] tmp = new char[4096];
 
-        try {
+        try
+        {
             InputStreamReader reader = new InputStreamReader(is, encoding);
             for (int cnt; (cnt = reader.read(tmp)) > 0; )
                 sb.append(tmp, 0, cnt);
-        } finally {
+        } finally
+        {
             is.close();
         }
         return sb.toString();
     }
 
     @Override
-    public String getServerResponse() throws InterruptedException {
+    public String getServerResponse() throws InterruptedException
+    {
         final String[] response = new String[1];
         URL url = null;
-        try {
-            url = new URL("http://map.igis.ru/layers/?param=filter=field_reys_nom,=,2*filter=IMode,=,2&id=215&editor=0&reload=1&&rnd=4719");
-            //url = new URL("http://map.igis.ru/layers/?param=filter=&id=215&editor=0&reload=1&&rnd=4719");
-        } catch (MalformedURLException e) {
+        try
+        {
+            url = new URL(String.format("http://map.igis.ru/layers/?param=filter=field_reys_nom,=,%d*filter=IMode,=,%d&id=215&editor=0&reload=1&&rnd=4719", this.number, this.transportId));
+        } catch (MalformedURLException e)
+        {
             e.printStackTrace();
         }
         assert url != null;
         HttpURLConnection connection = null;
-        try {
+        try
+        {
             connection = (HttpURLConnection) url.openConnection();
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
 
         InputStream in = null;
         assert connection != null;
-        try {
+        try
+        {
             in = connection.getInputStream();
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
         String encoding = connection.getContentEncoding();
         encoding = encoding == null ? "UTF-8" : encoding;
-        try {
+        try
+        {
             response[0] = convertStreamToString(in, encoding);
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             e.printStackTrace();
         }
 
         return response[0];
     }
-
 
 }

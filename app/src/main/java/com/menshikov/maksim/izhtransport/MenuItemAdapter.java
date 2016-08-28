@@ -6,6 +6,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.menshikov.maksim.izhtransport.ListItem.ListItem;
+import com.menshikov.maksim.izhtransport.ListItem.NodeItem;
+
+import org.w3c.dom.Node;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -15,9 +23,9 @@ public class MenuItemAdapter extends ArrayAdapter<ListItem>
 {
 
 
-    public MenuItemAdapter(Context context, List<ListItem> items)
+    public MenuItemAdapter(Context context, ListItem items)
     {
-        super(context, 0, items);
+        super(context, 0, items.operation());
     }
 
     @Override

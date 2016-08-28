@@ -27,11 +27,10 @@ public class TransportParser
         this.source = source;
     }
 
-    public ArrayList<MapPoint> getTransportPositions(int idTransport, int number) throws InterruptedException, IOException
+    public ArrayList<MapPoint> getTransportPositions() throws InterruptedException, IOException
     {
         ArrayList<MapPoint> transportPoints = new ArrayList<MapPoint>();
 
-        source.setTransportParameters(idTransport, number);
         String response = source.getServerResponse();
         if (response == null)
             throw new IOException();

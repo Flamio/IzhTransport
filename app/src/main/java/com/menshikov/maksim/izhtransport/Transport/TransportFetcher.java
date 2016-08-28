@@ -2,11 +2,9 @@ package com.menshikov.maksim.izhtransport.Transport;
 
 import com.menshikov.maksim.izhtransport.map.CoordHelper;
 import com.menshikov.maksim.izhtransport.map.MapPoint;
-import com.menshikov.maksim.izhtransport.map.MoveableMapPoint;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,11 +21,27 @@ public class TransportFetcher implements Observable.OnSubscribe<ArrayList<MapPoi
     private Subscriber<? super ArrayList<MapPoint>> subscriber;
     private long updateInterval = 5000;
 
+    private TimerTask timerTask = new TimerTask()
+    {
+        @Override
+        public void run()
+        {
+            if (subscriber == null)
+                return;
+            call(subscriber);
+        }
+    };
+
     private Timer timer = new Timer();
 
     public TransportFetcher(TransportParser transportParser)
     {
         this.transportParser = transportParser;
+    }
+
+    public void stop()
+    {
+        this.timer.purge();
     }
 
     @Override
@@ -36,21 +50,12 @@ public class TransportFetcher implements Observable.OnSubscribe<ArrayList<MapPoi
         if (this.subscriber == null)
         {
             this.subscriber = subscriberPar;
-            timer.schedule(new TimerTask()
-            {
-                @Override
-                public void run()
-                {
-                    if (subscriber == null)
-                        return;
-                    call(subscriber);
-                }
-            }, updateInterval, updateInterval);
+            timer.schedule(this.timerTask, this.updateInterval, this.updateInterval);
         }
 
         try
         {
-            ArrayList<MapPoint> mapPoints = transportParser.getTransportPositions(0, 0);
+            ArrayList<MapPoint> mapPoints = transportParser.getTransportPositions();
             for (MapPoint mapPoint : mapPoints)
                 CoordHelper.addMapPointCoords(mapPoint);
 
@@ -63,5 +68,11 @@ public class TransportFetcher implements Observable.OnSubscribe<ArrayList<MapPoi
             e.printStackTrace();
             this.subscriber.onNext(null);
         }
+        catch(NullPointerException e)
+        {
+            e.printStackTrace();
+            this.subscriber.onNext(null);
+        }
+
     }
 }

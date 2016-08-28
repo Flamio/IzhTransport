@@ -12,12 +12,11 @@
 
         android:layout_alignParentRight="true"/>
     <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/select_transport"
-        android:layout_width="50px"
-        android:layout_height="50px"
+        android:text="Фильтр"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="30px"
-        android:layout_marginBottom="50px"
-        android:background="@drawable/filter1"/>
+        android:layout_marginBottom="50px"/>
 </RelativeLayout>
