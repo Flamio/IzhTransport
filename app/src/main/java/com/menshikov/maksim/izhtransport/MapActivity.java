@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -16,22 +17,23 @@ import com.menshikov.maksim.izhtransport.map.MapPresenter;
 import com.menshikov.maksim.izhtransport.map.MapView;
 import com.menshikov.maksim.izhtransport.map.IMapView;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 
 public class MapActivity extends Activity
 {
-    private TransportFetcher transportFetcher;
-    private MapPresenter mapPresenter;
-    private Observable<ArrayList<MapPoint>> fetchTransport;
-    private Subscriber<ArrayList<MapPoint>> subscriber;
     private Subscription subscription;
+    private TransportParser transportParser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -60,54 +62,55 @@ public class MapActivity extends Activity
 
         final IMapView mapView = (MapView) findViewById(R.id.map_view);
 
-        this.mapPresenter = new MapPresenter(mapView, width, height);
+        final MapPresenter mapPresenter = new MapPresenter(mapView, width, height);
 
         TransportInfoSource transportInfoSource = new TransportInfoSource();
         Intent intent = getIntent();
 
-        int transportType = intent.getIntExtra("TRANSPORT_TYPE",0);
+        int transportType = intent.getIntExtra("TRANSPORT_TYPE",0) == -1 ? 0 : intent.getIntExtra("TRANSPORT_TYPE",0);
         int transportNumber = Integer.parseInt(intent.getStringExtra("TRANSPORT_NUMBER"));
 
         transportInfoSource.setTransportParameters(transportType, transportNumber);
-        this.transportFetcher = new TransportFetcher(new TransportParser(transportInfoSource));
-        this.fetchTransport = Observable.create(transportFetcher);
+        this.transportParser = new TransportParser(transportInfoSource);
 
-        this.subscriber = new Subscriber<ArrayList<MapPoint>>()
+        this.subscription = Observable.interval(2, TimeUnit.SECONDS, Schedulers.newThread()).map(new Func1<Long, ArrayList<MapPoint>>()
         {
-            private Toast toast = Toast.makeText(MapActivity.this, "Не удалось получить данные о транспорте", Toast.LENGTH_SHORT);
-
             @Override
-            public void onCompleted()
+            public ArrayList<MapPoint> call(Long integer)
             {
-
+                Log.i("fetching", "fetch");
+                return fetchTransport();
             }
-
+        }).subscribe(new Action1<ArrayList<MapPoint>>()
+        {
             @Override
-            public void onError(Throwable e)
+            public void call(ArrayList<MapPoint> mapPoints)
             {
+                mapPresenter.setMapPoints(mapPoints);
             }
+        });
 
-            @Override
-            public void onNext(ArrayList<MapPoint> iMapPoints)
-            {
-                if (iMapPoints == null)
-                {
-                    this.toast.show();
-                    return;
-                }
-                mapPresenter.setMapPoints(iMapPoints);
-            }
-        };
-
-        this.subscription = fetchTransport.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(this.subscriber);
     }
 
     @Override
     protected void onStop()
     {
         super.onStop();
-        this.transportFetcher.stop();
         this.subscription.unsubscribe();
+    }
+
+    private ArrayList<MapPoint> fetchTransport()
+    {
+        try
+        {
+            return this.transportParser.getTransportPositions();
+        } catch (InterruptedException e)
+        {
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

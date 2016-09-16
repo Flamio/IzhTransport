@@ -3,6 +3,7 @@ package com.menshikov.maksim.izhtransport.Transport;
 import android.location.Location;
 
 import com.menshikov.maksim.izhtransport.Sources.ITransportInfoSource;
+import com.menshikov.maksim.izhtransport.map.CoordHelper;
 import com.menshikov.maksim.izhtransport.map.MapPoint;
 import com.menshikov.maksim.izhtransport.map.MoveableMapPoint;
 
@@ -65,7 +66,7 @@ public class TransportParser
                 String temp = locationsString.get(0).substring(del + 1, locationsString.get(0).length());
                 location.setLatitude(Double.parseDouble(temp));
                 transportPoint.setGeoLocation(location);
-
+                CoordHelper.addMapPointCoords(transportPoint);
             }
 
             ArrayList<String> directionPngStrings = this.getStringByPattern(placemark, "\\d*\\.png");

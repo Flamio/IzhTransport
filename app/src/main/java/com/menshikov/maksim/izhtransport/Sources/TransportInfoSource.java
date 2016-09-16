@@ -49,7 +49,8 @@ public class TransportInfoSource implements ITransportInfoSource
         URL url = null;
         try
         {
-            url = new URL(String.format("http://map.igis.ru/layers/?param=filter=field_reys_nom,=,%d*filter=IMode,=,%d&id=215&editor=0&reload=1&&rnd=4719", this.number, this.transportId));
+            url = new URL(String.format("http://map.igis.ru/layers/?param=filter=field_reys_nom%s*filter=IMode%s&id=215&editor=0&reload=1&&rnd=4719",
+                    this.number == 0 ? "=" : ",=," + Integer.toString(this.number) , this.transportId == 0 ? "=" : ",=," + Integer.toString(this.transportId)));
         } catch (MalformedURLException e)
         {
             e.printStackTrace();

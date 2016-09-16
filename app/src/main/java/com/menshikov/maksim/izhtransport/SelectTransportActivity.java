@@ -55,8 +55,9 @@ public class SelectTransportActivity extends Activity
                 }
 
                 Intent intent = new Intent(getBaseContext(), MapActivity.class);
-                intent.putExtra("TRANSPORT_TYPE", userTransportTypes.get(userTransportTypes.size() - 1));
-                intent.putExtra("TRANSPORT_NUMBER", selectedItem.getName());
+                int selectedTypesSize = userTransportTypes.size();
+                intent.putExtra("TRANSPORT_TYPE",  selectedTypesSize > 0 ? userTransportTypes.get(selectedTypesSize - 1) : selectedItem.getIdItemm());
+                intent.putExtra("TRANSPORT_NUMBER", selectedItem.getName() == "Все" ? "0" : selectedItem.getName() );
                 userTransportTypes.clear();
                 startActivity(intent);
             }

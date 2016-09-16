@@ -1,12 +1,11 @@
 package com.menshikov.maksim.izhtransport.map;
 
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.menshikov.maksim.izhtransport.ResourceManager;
-import com.menshikov.maksim.izhtransport.Sources.TransportTestSource;
-import com.menshikov.maksim.izhtransport.Transport.TransportFetcher;
-import com.menshikov.maksim.izhtransport.Transport.TransportParser;
 
 import java.util.ArrayList;
 
@@ -73,7 +72,16 @@ public class MapPresenter
         model.setMapPoints(mapPoints);
         ArrayList<MapPoint> points = model.getVisiblePoints();
         mapView.setMapPoints(points);
-        mapView.redraw(true);
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable()
+        {
+            public void run()
+            {
+                mapView.redraw(true);
+            }
+        });
+
     }
 
 }
