@@ -35,6 +35,21 @@ public class MapActivity extends Activity
 {
     private Subscription subscription;
     private TransportParser transportParser;
+    private MapPresenter mapPresenter;
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        this.subscription = this.subscribeTransportObservable(this.getTransportObservable());
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        this.subscription.unsubscribe();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -63,7 +78,7 @@ public class MapActivity extends Activity
 
         final IMapView mapView = (MapView) findViewById(R.id.map_view);
 
-        final MapPresenter mapPresenter = new MapPresenter(mapView, width, height);
+        this.mapPresenter = new MapPresenter(mapView, width, height);
 
         TransportInfoSource transportInfoSource = new TransportInfoSource();
         Intent intent = getIntent();
@@ -73,8 +88,31 @@ public class MapActivity extends Activity
 
         transportInfoSource.setTransportParameters(transportType, transportNumber);
         this.transportParser = new TransportParser(transportInfoSource);
+    }
 
-        this.subscription = Observable.interval(10, TimeUnit.SECONDS, Schedulers.newThread()).map(new Func1<Long, ArrayList<MapPoint>>()
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+        this.subscription.unsubscribe();
+    }
+
+    private Subscription subscribeTransportObservable(Observable transportObservable)
+    {
+        return transportObservable.subscribe(new Action1<ArrayList<MapPoint>>()
+        {
+            @Override
+            public void call(ArrayList<MapPoint> mapPoints)
+            {
+                mapPresenter.setMapPoints(mapPoints);
+                mapPresenter.moveMapTo(mapPoints.get(0));
+            }
+        });
+    }
+
+    private Observable getTransportObservable()
+    {
+        return Observable.interval(10, TimeUnit.SECONDS, Schedulers.newThread()).map(new Func1<Long, ArrayList<MapPoint>>()
         {
             @Override
             public ArrayList<MapPoint> call(Long integer)
@@ -102,23 +140,7 @@ public class MapActivity extends Activity
                 }
                 return true;
             }
-        }).subscribe(new Action1<ArrayList<MapPoint>>()
-        {
-            @Override
-            public void call(ArrayList<MapPoint> mapPoints)
-            {
-                mapPresenter.setMapPoints(mapPoints);
-                mapPresenter.moveMapTo(mapPoints.get(0));
-            }
         });
-
-    }
-
-    @Override
-    protected void onStop()
-    {
-        super.onStop();
-        this.subscription.unsubscribe();
     }
 
     private ArrayList<MapPoint> fetchTransport()
