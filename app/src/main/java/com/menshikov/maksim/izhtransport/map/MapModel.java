@@ -22,8 +22,8 @@ public class MapModel
     public static int mapWidth;
     public static int mapHeight;
 
-    private int currentLeft = 3000;
-    private int currentTop = 3000;
+    private int currentLeft = 0;
+    private int currentTop = 0;
     private int currentWidth;
     private int currentHeight;
 

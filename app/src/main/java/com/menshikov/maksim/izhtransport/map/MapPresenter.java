@@ -1,6 +1,7 @@
 package com.menshikov.maksim.izhtransport.map;
 
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -21,8 +22,15 @@ public class MapPresenter
 {
     final private IMapView mapView;
     final MapModel model;
+    private final MapMoveListener mapMoveListener;
     private int width;
     private int height;
+    Handler handler = new Handler(Looper.getMainLooper());
+
+    public Handler getMainLoopHandler()
+    {
+        return this.handler;
+    }
 
     public MapPresenter(final IMapView mapView, int width, int height)
     {
@@ -32,7 +40,7 @@ public class MapPresenter
 
         model = new MapModel(width, height, new ResourceMapSource(ResourceManager.Instance().getResources()));
 
-        MapMoveListener mapMoveListener = new MapMoveListener(model, mapView);
+        mapMoveListener = new MapMoveListener(model, mapView);
 
         Observable<Bitmap> fetchMap = Observable.create(mapMoveListener);
 
@@ -57,12 +65,31 @@ public class MapPresenter
             {
                 mapView.setXYMap(0, 0);
                 mapView.setBitmap(bitmap);
-
                 ArrayList<MapPoint> points = model.getVisiblePoints();
                 mapView.setMapPoints(points);
                 mapView.redraw(true);
             }
         });
+    }
+
+    public void moveMapTo(MapPoint point)
+    {
+        if (point == null)
+            return;
+
+        if (point.getGeoLocation() == null)
+            return;
+
+        CoordHelper.addMapPointCoords(point);
+        this.model.setCurrentTop(point.getXY().y - height / 2);
+        this.model.setCurrentLeft(point.getXY().x - width / 2);
+        try
+        {
+            this.mapMoveListener.onStopMoving();
+        } catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void setMapPoints(ArrayList<MapPoint> mapPoints)
@@ -72,16 +99,18 @@ public class MapPresenter
         model.setMapPoints(mapPoints);
         ArrayList<MapPoint> points = model.getVisiblePoints();
         mapView.setMapPoints(points);
+        this.redraw();
+    }
 
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable()
+    private void redraw()
+    {
+        this.handler.post(new Runnable()
         {
             public void run()
             {
                 mapView.redraw(true);
             }
         });
-
     }
 
 }

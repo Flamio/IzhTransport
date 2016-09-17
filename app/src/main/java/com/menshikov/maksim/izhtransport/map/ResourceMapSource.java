@@ -7,7 +7,6 @@ import android.graphics.BitmapRegionDecoder;
 import android.graphics.Rect;
 
 import com.menshikov.maksim.izhtransport.R;
-import com.menshikov.maksim.izhtransport.map.IMapSource;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,12 +16,8 @@ import java.io.InputStream;
  */
 public class ResourceMapSource implements IMapSource
 {
-
     private Resources resources;
     private BitmapRegionDecoder decoder;
-    private Bitmap generalMap;
-    private float kx;
-    private float ky;
     private int mapWidth;
     private int mapHeight;
     private Bitmap bitmap;
@@ -31,10 +26,10 @@ public class ResourceMapSource implements IMapSource
     {
         this.resources = resources;
         generateDecoder();
-        generateGeneralMap();
+        getMapParameters();
     }
 
-    private void generateGeneralMap()
+    private void getMapParameters()
     {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -42,17 +37,6 @@ public class ResourceMapSource implements IMapSource
 
         mapHeight = options.outHeight;
         mapWidth = options.outWidth;
-
-        options.inJustDecodeBounds = false;
-        options.inPreferQualityOverSpeed = false;
-        options.inSampleSize = 5;
-        options.inPreferQualityOverSpeed = false;
-        options.inPreferredConfig = Bitmap.Config.RGB_565;
-        generalMap = BitmapFactory.decodeResource(resources, R.drawable.map, options);
-        int width = generalMap.getWidth();
-        int height = generalMap.getHeight();
-        kx = (float) mapWidth / (float) width;
-        ky = (float) mapHeight / (float) height;
     }
 
     private void generateDecoder()
@@ -94,7 +78,6 @@ public class ResourceMapSource implements IMapSource
     @Override
     public Bitmap getBadMap(Rect rect, int screenWidth, int screenHeight)
     {
-        bitmap = Bitmap.createBitmap(generalMap, (int) (rect.left / kx), (int) (rect.top / ky), (int) (rect.width() / kx), (int) (rect.height() / ky));
-        return Bitmap.createScaledBitmap(bitmap, screenWidth, screenHeight, false);
+        return null;
     }
 }

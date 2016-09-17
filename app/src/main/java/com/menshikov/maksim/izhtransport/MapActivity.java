@@ -3,6 +3,7 @@ package com.menshikov.maksim.izhtransport;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -67,19 +68,39 @@ public class MapActivity extends Activity
         TransportInfoSource transportInfoSource = new TransportInfoSource();
         Intent intent = getIntent();
 
-        int transportType = intent.getIntExtra("TRANSPORT_TYPE",0) == -1 ? 0 : intent.getIntExtra("TRANSPORT_TYPE",0);
+        int transportType = intent.getIntExtra("TRANSPORT_TYPE", 0) == -1 ? 0 : intent.getIntExtra("TRANSPORT_TYPE", 0);
         int transportNumber = Integer.parseInt(intent.getStringExtra("TRANSPORT_NUMBER"));
 
         transportInfoSource.setTransportParameters(transportType, transportNumber);
         this.transportParser = new TransportParser(transportInfoSource);
 
-        this.subscription = Observable.interval(2, TimeUnit.SECONDS, Schedulers.newThread()).map(new Func1<Long, ArrayList<MapPoint>>()
+        this.subscription = Observable.interval(10, TimeUnit.SECONDS, Schedulers.newThread()).map(new Func1<Long, ArrayList<MapPoint>>()
         {
             @Override
             public ArrayList<MapPoint> call(Long integer)
             {
-                Log.i("fetching", "fetch");
                 return fetchTransport();
+            }
+        }).filter(new Func1<ArrayList<MapPoint>, Boolean>()
+        {
+            @Override
+            public Boolean call(ArrayList<MapPoint> mapPoints)
+            {
+                if (mapPoints == null)
+                {
+                    Handler handler = mapPresenter.getMainLoopHandler();
+                    handler.post(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            Toast toast = Toast.makeText(MapActivity.this, "Не удалось получить данные о транспорте", Toast.LENGTH_SHORT);
+                            toast.show();
+                        }
+                    });
+                    return false;
+                }
+                return true;
             }
         }).subscribe(new Action1<ArrayList<MapPoint>>()
         {
@@ -87,6 +108,7 @@ public class MapActivity extends Activity
             public void call(ArrayList<MapPoint> mapPoints)
             {
                 mapPresenter.setMapPoints(mapPoints);
+                mapPresenter.moveMapTo(mapPoints.get(0));
             }
         });
 
