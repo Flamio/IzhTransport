@@ -12,11 +12,28 @@
 
         android:layout_alignParentRight="true"/>
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/next_transport"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="20px"
+        android:layout_marginRight="20px"
+        android:background="@drawable/next_transport"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/folow_transport"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="130px"
+        android:layout_marginRight="20px"
+        android:background="@drawable/following_off"
+        />
+    <Button
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/select_transport"
-        android:text="Фильтр"
-        android:layout_alignParentBottom="true"
+        android:background="@drawable/filter"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="50px"/>
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="20px"/>
 </RelativeLayout>

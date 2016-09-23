@@ -5,13 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.menshikov.maksim.izhtransport.Sources.TransportInfoSource;
-import com.menshikov.maksim.izhtransport.Transport.TransportFetcher;
 import com.menshikov.maksim.izhtransport.Transport.TransportParser;
 import com.menshikov.maksim.izhtransport.map.MapPoint;
 import com.menshikov.maksim.izhtransport.map.MapPresenter;
@@ -25,9 +23,9 @@ import java.util.concurrent.TimeUnit;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.internal.util.unsafe.MpmcArrayQueue;
 import rx.schedulers.Schedulers;
 
 
@@ -36,12 +34,19 @@ public class MapActivity extends Activity
     private Subscription subscription;
     private TransportParser transportParser;
     private MapPresenter mapPresenter;
+    private int followingTransportID = 0;
+    private int followingTransportIndex = 0;
+    private ArrayList<MapPoint> points;
+    private boolean followingTransport = false;
+    private boolean firstLoad;
 
     @Override
     protected void onResume()
     {
         super.onResume();
-        this.subscription = this.subscribeTransportObservable(this.getTransportObservable());
+        this.subscription = this.subscribeTransportObservable(this.getTransportIntervalObservable());
+        firstLoad = true;
+        this.subscribeTransportObservable(this.getTransportObservable());
     }
 
     @Override
@@ -63,16 +68,7 @@ public class MapActivity extends Activity
 
         setContentView(R.layout.maplayout);
 
-        Button selectTransportButton = (Button) findViewById(R.id.select_transport);
-        selectTransportButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Intent i = new Intent(getBaseContext(), SelectTransportActivity.class);
-                startActivity(i);
-            }
-        });
+        this.bindButtons();
 
         ResourceManager.Instance().setContext(this.getApplicationContext());
 
@@ -99,27 +95,7 @@ public class MapActivity extends Activity
 
     private Subscription subscribeTransportObservable(Observable transportObservable)
     {
-        return transportObservable.subscribe(new Action1<ArrayList<MapPoint>>()
-        {
-            @Override
-            public void call(ArrayList<MapPoint> mapPoints)
-            {
-                mapPresenter.setMapPoints(mapPoints);
-                mapPresenter.moveMapTo(mapPoints.get(0));
-            }
-        });
-    }
-
-    private Observable getTransportObservable()
-    {
-        return Observable.interval(10, TimeUnit.SECONDS, Schedulers.newThread()).map(new Func1<Long, ArrayList<MapPoint>>()
-        {
-            @Override
-            public ArrayList<MapPoint> call(Long integer)
-            {
-                return fetchTransport();
-            }
-        }).filter(new Func1<ArrayList<MapPoint>, Boolean>()
+        return transportObservable.filter(new Func1<ArrayList<MapPoint>, Boolean>()
         {
             @Override
             public Boolean call(ArrayList<MapPoint> mapPoints)
@@ -138,7 +114,61 @@ public class MapActivity extends Activity
                     });
                     return false;
                 }
+                points = mapPoints;
+                if (followingTransportID == 0)
+                    followingTransportID = points.get(0).getId();
                 return true;
+            }
+        }).subscribe(new Action1<ArrayList<MapPoint>>()
+        {
+            @Override
+            public void call(ArrayList<MapPoint> mapPoints)
+            {
+                mapPresenter.setMapPoints(mapPoints);
+                if (followingTransport || firstLoad)
+                {
+                    MapPoint point = getMapPointById(followingTransportID);
+                    if (point != null)
+                    {
+                        mapPresenter.moveMapTo(point);
+                        firstLoad = false;
+                    }
+                }
+            }
+        });
+    }
+
+    private MapPoint getMapPointById(int id)
+    {
+        if (points == null)
+            return null;
+        for (MapPoint point : this.points)
+            if (point.getId() == id)
+                return point;
+        return null;
+    }
+
+    private Observable getTransportObservable()
+    {
+        return Observable.create(new Observable.OnSubscribe<ArrayList<MapPoint>>()
+        {
+            @Override
+            public void call(Subscriber<? super ArrayList<MapPoint>> subscriber)
+            {
+                subscriber.onNext(fetchTransport());
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.newThread());
+    }
+
+    private Observable getTransportIntervalObservable()
+    {
+        return Observable.interval(10, TimeUnit.SECONDS, Schedulers.newThread()).map(new Func1<Long, ArrayList<MapPoint>>()
+        {
+            @Override
+            public ArrayList<MapPoint> call(Long integer)
+            {
+                return fetchTransport();
             }
         });
     }
@@ -155,6 +185,56 @@ public class MapActivity extends Activity
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void bindButtons()
+    {
+        Button selectTransportButton = (Button) findViewById(R.id.select_transport);
+        selectTransportButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent i = new Intent(getBaseContext(), SelectTransportActivity.class);
+                startActivity(i);
+            }
+        });
+
+        Button nextTransportButton = (Button) findViewById(R.id.next_transport);
+        nextTransportButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if (points == null)
+                    return;
+                MapPoint point = points.get(followingTransportIndex);
+                followingTransportID = point.getId();
+                mapPresenter.moveMapTo(point);
+
+                followingTransportIndex++;
+                if (followingTransportIndex >= points.size())
+                    followingTransportIndex = 0;
+            }
+        });
+
+        final Button followingButton = (Button) findViewById(R.id.folow_transport);
+        followingButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                followingTransport = !followingTransport;
+                int drawable = boolToReourceIdConverter(followingTransport);
+
+                followingButton.setBackgroundResource(drawable);
+            }
+        });
+    }
+
+    private int boolToReourceIdConverter(boolean bool)
+    {
+        return bool ? R.drawable.following_on : R.drawable.following_off;
     }
 
 }

@@ -14,6 +14,8 @@ import com.menshikov.maksim.izhtransport.R;
  */
 public abstract class MapPoint implements ICloneable
 {
+    private int id;
+
     protected final Bitmap bitmap;
 
     protected Point point;
@@ -52,4 +54,14 @@ public abstract class MapPoint implements ICloneable
     }
 
     abstract public ICloneable clone();
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
+    }
 }

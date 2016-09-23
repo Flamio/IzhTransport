@@ -1,8 +1,6 @@
 <resources>
     <string name="app_name">IzhTransport</string>
-
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings"></string>
     <string name="title_activity_select_transport">SelectTransportActivity</string>
     <string name="title_activity_number_select_transport">SelectNumberTransportActivity</string>
 </resources>

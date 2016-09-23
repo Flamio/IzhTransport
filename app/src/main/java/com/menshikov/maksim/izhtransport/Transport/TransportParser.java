@@ -56,6 +56,14 @@ public class TransportParser
                 }
             }
 
+            ArrayList<String> idString = this.getStringByPattern(placemark, "id:\\s?'\\d*'");
+            if (!idString.isEmpty())
+            {
+                ArrayList<String> id = this.getStringByPattern(idString.get(0), "[0-9]{1,}");
+                if (!id.isEmpty())
+                    transportPoint.setId(Integer.parseInt(id.get(0)));
+            }
+
             ArrayList<String> locationsString = this.getStringByPattern(placemark, "[0-9]{2}\\.[0-9]{1,4}, [0-9]{2}\\.[0-9]{1,4}");
             if (!locationsString.isEmpty())
             {
