@@ -10,9 +10,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.menshikov.maksim.izhtransport.map.IMapMoveListener;
-import com.menshikov.maksim.izhtransport.map.IMapView;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -134,10 +131,16 @@ public class MapView extends View implements View.OnTouchListener, IMapView
 
                 int rx = (int) (beginX - event.getX());
                 int ry = (int) (beginY - event.getY());
+
+                this.xMap-=rx;
+                this.yMap-=ry;
+
                 mapMoveListener.onMoving(rx, ry);
 
                 beginX = event.getX();
                 beginY = event.getY();
+
+                this.redraw(false);
 
                 break;
             case MotionEvent.ACTION_UP: // отпускание

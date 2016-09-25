@@ -1,7 +1,6 @@
 package com.menshikov.maksim.izhtransport.map;
 
 import android.graphics.Bitmap;
-import android.location.Location;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -40,7 +39,7 @@ public class MapPresenter
 
         model = new MapModel(width, height, new ResourceMapSource(ResourceManager.Instance().getResources()));
 
-        mapMoveListener = new MapMoveListener(model, mapView);
+        mapMoveListener = new MapMoveListener(model);
 
         Observable<Bitmap> fetchMap = Observable.create(mapMoveListener);
 

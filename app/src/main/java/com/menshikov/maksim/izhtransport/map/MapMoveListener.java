@@ -16,13 +16,11 @@ import rx.Subscriber;
 public class MapMoveListener implements IMapMoveListener, Observable.OnSubscribe<Bitmap>
 {
     private MapModel model;
-    private IMapView view;
     private Subscriber<? super Bitmap> subscriber = null;
 
-    public MapMoveListener(MapModel model, final IMapView view)
+    public MapMoveListener(MapModel model)
     {
         this.model = model;
-        this.view = view;
     }
 
     @Override
@@ -30,8 +28,6 @@ public class MapMoveListener implements IMapMoveListener, Observable.OnSubscribe
     {
         model.setCurrentLeft(model.getCurrentLeft() + dx);
         model.setCurrentTop(model.getCurrentTop() + dy);
-        this.view.setXYMap(this.view.getXYMap().x - dx, this.view.getXYMap().y - dy);
-        this.view.redraw(false);
     }
 
     @Override
