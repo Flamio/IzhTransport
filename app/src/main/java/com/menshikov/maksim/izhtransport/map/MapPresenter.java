@@ -25,6 +25,7 @@ public class MapPresenter
     private int width;
     private int height;
     Handler handler = new Handler(Looper.getMainLooper());
+    private boolean isDrawingMoveable = false;
 
     public Handler getMainLoopHandler()
     {
@@ -40,12 +41,16 @@ public class MapPresenter
         model = new MapModel(width, height, new ResourceMapSource(ResourceManager.Instance().getResources()));
 
         mapMoveListener = new MapMoveListener(model);
-
-        Observable<Bitmap> fetchMap = Observable.create(mapMoveListener);
-
         mapView.setMapMoveListener(mapMoveListener);
 
-        fetchMap.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Bitmap>()
+        Observable.create(new Observable.OnSubscribe<Bitmap>()
+        {
+            @Override
+            public void call(Subscriber<? super Bitmap> subscriber)
+            {
+                mapMoveListener.setMapSubscriber(subscriber);
+            }
+        }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Bitmap>()
         {
             @Override
             public void onCompleted()
@@ -66,7 +71,35 @@ public class MapPresenter
                 mapView.setBitmap(bitmap);
                 ArrayList<MapPoint> points = model.getVisiblePoints();
                 mapView.setMapPoints(points);
-                mapView.redraw(true);
+                mapView.redraw(isDrawingMoveable);
+            }
+        });
+
+        Observable.create(new Observable.OnSubscribe<Boolean>()
+        {
+            @Override
+            public void call(Subscriber<? super Boolean> subscriber)
+            {
+                mapMoveListener.setDrawingMoveablesListener(subscriber);
+            }
+        }).subscribe(new Subscriber<Boolean>()
+        {
+            @Override
+            public void onCompleted()
+            {
+
+            }
+
+            @Override
+            public void onError(Throwable e)
+            {
+
+            }
+
+            @Override
+            public void onNext(Boolean aBoolean)
+            {
+                isDrawingMoveable = aBoolean;
             }
         });
     }
@@ -111,5 +144,4 @@ public class MapPresenter
             }
         });
     }
-
 }

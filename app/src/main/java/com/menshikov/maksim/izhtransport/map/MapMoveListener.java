@@ -1,26 +1,24 @@
 package com.menshikov.maksim.izhtransport.map;
 
 import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.os.Handler;
 
 
-import java.util.Timer;
-
-import rx.Observable;
 import rx.Subscriber;
 
 /**
  * Created by Maksim on 10.07.2016.
  */
-public class MapMoveListener implements IMapMoveListener, Observable.OnSubscribe<Bitmap>
+public class MapMoveListener implements IMapMoveListener
 {
     private MapModel model;
-    private Subscriber<? super Bitmap> subscriber = null;
+    private Subscriber<? super Bitmap> onStopSubscriber = null;
+
+    private Subscriber<? super Boolean> onDrawingMoveablesListener;
 
     public MapMoveListener(MapModel model)
     {
         this.model = model;
+
     }
 
     @Override
@@ -28,12 +26,16 @@ public class MapMoveListener implements IMapMoveListener, Observable.OnSubscribe
     {
         model.setCurrentLeft(model.getCurrentLeft() + dx);
         model.setCurrentTop(model.getCurrentTop() + dy);
+
+        this.onDrawingMoveablesListener.onNext(false);
+        //this.onStopSubscriber.onNext(model.getMap(false));
     }
 
     @Override
     public void onStopMoving() throws InterruptedException
     {
-        this.call(this.subscriber);
+        this.onDrawingMoveablesListener.onNext(true);
+        this.onStopSubscriber.onNext(model.getMap(false));
     }
 
     @Override
@@ -59,16 +61,19 @@ public class MapMoveListener implements IMapMoveListener, Observable.OnSubscribe
             handler.postDelayed(handlerRunnable, this.updateInterval);
             this.isTimerRunning = true;
         }
-        //this.call(this.subscriber);
+        //this.call(this.onStopSubscriber);
         //view.clearTransportPoints();*/
     }
 
     @Override
-    public void call(Subscriber<? super Bitmap> subscriber)
+    public void setMapSubscriber(Subscriber<? super Bitmap> subscriber)
     {
-        if (this.subscriber == null)
-            this.subscriber = subscriber;
-        Bitmap currentBitmap = model.getMap(false);
-        subscriber.onNext(currentBitmap);
+        this.onStopSubscriber = subscriber;
+    }
+
+    @Override
+    public void setDrawingMoveablesListener(Subscriber<? super Boolean> subscriber)
+    {
+        this.onDrawingMoveablesListener = subscriber;
     }
 }

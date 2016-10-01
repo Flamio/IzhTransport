@@ -76,7 +76,6 @@ public class MapView extends View implements View.OnTouchListener, IMapView
 
         if (!this.isDrawMovingPoints)
         {
-            this.isDrawMovingPoints = true;
             return;
         }
 
@@ -140,7 +139,7 @@ public class MapView extends View implements View.OnTouchListener, IMapView
                 beginX = event.getX();
                 beginY = event.getY();
 
-                this.redraw(false);
+                redraw(false);
 
                 break;
             case MotionEvent.ACTION_UP: // отпускание
