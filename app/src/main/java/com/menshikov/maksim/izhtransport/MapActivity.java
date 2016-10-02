@@ -84,6 +84,25 @@ public class MapActivity extends Activity
 
         transportInfoSource.setTransportParameters(transportType, transportNumber);
         this.transportParser = new TransportParser(transportInfoSource);
+
+        try
+        {
+            this.followingTransportID = savedInstanceState.getInt("FOLLOWING_ITEM_ID");
+            this.followingTransport = savedInstanceState.getBoolean("IS_FOLLOWING_ITEM");
+        }
+        catch (NullPointerException ex)
+        {
+            this.followingTransportID = 0;
+            this.followingTransport = false;
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outstate)
+    {
+        super.onSaveInstanceState(outstate);
+        outstate.putInt("FOLLOWING_ITEM_ID", this.followingTransportID);
+        outstate.putBoolean("IS_FOLLOWING_ITEM", this.followingTransport);
     }
 
     @Override
