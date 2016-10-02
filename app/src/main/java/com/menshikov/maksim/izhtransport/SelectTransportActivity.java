@@ -20,6 +20,9 @@ import rx.functions.Action1;
 
 public class SelectTransportActivity extends Activity
 {
+    private ListItem currentListItem;
+    private ListView transportTypesList;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -31,14 +34,15 @@ public class SelectTransportActivity extends Activity
         databaseAccess.open();
 
         final ListItem transportTypes = databaseAccess.getAllTransportTypes();
+        this.currentListItem = transportTypes;
 
-        final ListView transportTypesList = (ListView) findViewById(R.id.transport_types_list);
+        this.transportTypesList = (ListView) findViewById(R.id.transport_types_list);
 
-        final Context context = this;
+        this.context = this;
 
-        MenuItemAdapter menuItemAdapter = new MenuItemAdapter(context, transportTypes);
+        MenuItemAdapter menuItemAdapter = new MenuItemAdapter(this.context, transportTypes);
 
-        transportTypesList.setAdapter(menuItemAdapter);
+        this.transportTypesList.setAdapter(menuItemAdapter);
 
         ListItem.setLeafAction(new Action1<ListItem>()
         {
@@ -57,6 +61,7 @@ public class SelectTransportActivity extends Activity
             @Override
             public void call(ListItem selectedItem)
             {
+                currentListItem = selectedItem;
                 MenuItemAdapter menuItemAdapter = new MenuItemAdapter(context, selectedItem);
                 transportTypesList.setAdapter(null);
                 transportTypesList.setAdapter(menuItemAdapter);
@@ -73,6 +78,16 @@ public class SelectTransportActivity extends Activity
                 selectedItem.operation();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        ListItem parent = this.currentListItem.getParent();
+        if (parent == null)
+            return;
+        MenuItemAdapter menuItemAdapter = new MenuItemAdapter(context, parent);
+        this.transportTypesList.setAdapter(menuItemAdapter);
     }
 
 }
