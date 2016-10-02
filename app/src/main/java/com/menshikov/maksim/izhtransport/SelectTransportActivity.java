@@ -14,6 +14,9 @@ import com.menshikov.maksim.izhtransport.ListItem.ListItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.functions.Action;
+import rx.functions.Action1;
+
 
 public class SelectTransportActivity extends Activity
 {
@@ -37,7 +40,29 @@ public class SelectTransportActivity extends Activity
 
         transportTypesList.setAdapter(menuItemAdapter);
 
-        final ArrayList<Integer> userTransportTypes = new ArrayList<>();
+        ListItem.setLeafAction(new Action1<ListItem>()
+        {
+            @Override
+            public void call(ListItem selectedItem)
+            {
+                Intent intent = new Intent(getBaseContext(), MapActivity.class);
+                intent.putExtra("TRANSPORT_TYPE",  selectedItem.getParent().getName());
+                intent.putExtra("TRANSPORT_NUMBER", selectedItem.getName() == "Все" ? "0" : selectedItem.getName() );
+                startActivity(intent);
+            }
+        });
+
+        ListItem.setNodeAction(new Action1<ListItem>()
+        {
+            @Override
+            public void call(ListItem selectedItem)
+            {
+                MenuItemAdapter menuItemAdapter = new MenuItemAdapter(context, selectedItem);
+                transportTypesList.setAdapter(null);
+                transportTypesList.setAdapter(menuItemAdapter);
+                return;
+            }
+        });
 
         transportTypesList.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
@@ -45,21 +70,7 @@ public class SelectTransportActivity extends Activity
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
             {
                 ListItem selectedItem = (ListItem) adapterView.getItemAtPosition(i);
-                if (selectedItem.operation().size() > 1)
-                {
-                    userTransportTypes.add(selectedItem.getIdItemm());
-                    MenuItemAdapter menuItemAdapter = new MenuItemAdapter(context, selectedItem);
-                    transportTypesList.setAdapter(null);
-                    transportTypesList.setAdapter(menuItemAdapter);
-                    return;
-                }
-
-                Intent intent = new Intent(getBaseContext(), MapActivity.class);
-                int selectedTypesSize = userTransportTypes.size();
-                intent.putExtra("TRANSPORT_TYPE",  selectedTypesSize > 0 ? userTransportTypes.get(selectedTypesSize - 1) : selectedItem.getIdItemm());
-                intent.putExtra("TRANSPORT_NUMBER", selectedItem.getName() == "Все" ? "0" : selectedItem.getName() );
-                userTransportTypes.clear();
-                startActivity(intent);
+                selectedItem.operation();
             }
         });
     }

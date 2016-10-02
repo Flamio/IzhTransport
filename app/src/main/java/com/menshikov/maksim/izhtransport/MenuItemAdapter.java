@@ -21,11 +21,9 @@ import java.util.List;
  */
 public class MenuItemAdapter extends ArrayAdapter<ListItem>
 {
-
-
     public MenuItemAdapter(Context context, ListItem items)
     {
-        super(context, 0, items.operation());
+        super(context, 0, items.getChildrens());
     }
 
     @Override

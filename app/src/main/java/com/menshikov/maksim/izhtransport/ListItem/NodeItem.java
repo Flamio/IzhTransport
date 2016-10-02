@@ -8,21 +8,23 @@ import java.util.List;
  */
 public class NodeItem extends ListItem
 {
-    private List<ListItem> childrens = new ArrayList<>();
-
     public NodeItem(int id, String name)
     {
         super(id, name);
     }
 
     @Override
-    public List<ListItem> operation()
+    public void operation()
     {
-        return this.childrens;
+        if (nodeAction == null)
+            return;
+
+        nodeAction.call(this);
     }
 
     public void addChildren(ListItem item)
     {
+        item.setParent(this);
         this.childrens.add(item);
     }
 

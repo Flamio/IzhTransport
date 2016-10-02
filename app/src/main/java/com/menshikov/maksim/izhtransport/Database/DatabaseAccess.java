@@ -56,13 +56,16 @@ public class DatabaseAccess
         Cursor cursor = database.rawQuery("SELECT * FROM TransportType", null);
         cursor.moveToFirst();
 
-        NodeItem nodeAll = new NodeItem(-1, "Все");
+        ListLeaf nodeAll = new ListLeaf(-1, "Все");
         itemsTree.addChildren(nodeAll);
 
         while (!cursor.isAfterLast())
         {
             NodeItem transportType = new NodeItem(Integer.parseInt(cursor.getString(2)), cursor.getString(1));
-            transportType.addChildren(new ListLeaf(-1, "Все"));
+
+            ListLeaf allOfType = new ListLeaf(-1, "Все");
+            transportType.addChildren(allOfType);
+
             Cursor cursorNumbers = database.rawQuery("select Number, Id  from Transport  where TypeId ==  " + transportType.getIdItemm(), null);
             cursorNumbers.moveToFirst();
             while (!cursorNumbers.isAfterLast())

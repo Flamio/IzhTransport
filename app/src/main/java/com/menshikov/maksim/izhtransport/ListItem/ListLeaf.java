@@ -15,8 +15,11 @@ public class ListLeaf extends ListItem
     }
 
     @Override
-    public List<ListItem> operation()
+    public void operation()
     {
-        return Arrays.asList((ListItem)this);
+        if (leafAction == null)
+            return;
+
+        leafAction.call(this);
     }
 }
