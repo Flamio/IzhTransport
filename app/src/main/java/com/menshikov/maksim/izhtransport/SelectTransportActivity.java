@@ -50,7 +50,7 @@ public class SelectTransportActivity extends Activity
             public void call(ListItem selectedItem)
             {
                 Intent intent = new Intent(getBaseContext(), MapActivity.class);
-                intent.putExtra("TRANSPORT_TYPE",  selectedItem.getParent().getName());
+                intent.putExtra("TRANSPORT_TYPE",  selectedItem.getParent().getIdItemm());
                 intent.putExtra("TRANSPORT_NUMBER", selectedItem.getName() == "Все" ? "0" : selectedItem.getName() );
                 startActivity(intent);
             }
