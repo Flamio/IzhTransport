@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 
+import com.menshikov.maksim.izhtransport.ResourceManager;
+
 /**
  * Created by Maksim on 31.07.2016.
  */
@@ -48,18 +50,26 @@ abstract public class MoveableMapPoint extends MapPoint
     {
         super.draw(canvas);
 
+        final float arrowSizeInDip = 7;
+        final float arrowSizeInDip2 = 21;
+        final float bitmapSizeInDip = 128;
+
+        int arrowSizeInPixels = (int)this.dipToPixels(ResourceManager.Instance().getResources(), arrowSizeInDip);
+        int arrowSizeInPixels2 = (int)this.dipToPixels(ResourceManager.Instance().getResources(), arrowSizeInDip2);
+        int bitmapSizeInPixels = (int)this.dipToPixels(ResourceManager.Instance().getResources(), bitmapSizeInDip);
+
         Bitmap rotatedDirectionIcon = this.rotateBitmap(this.directionIcon, this.direction);
         Rect drawingIconRect = null;
         if (this.direction >= 0 && this.direction <= 45 || this.direction > 315)
-            drawingIconRect = new Rect(this.point.x - 10, this.point.y - 30, this.point.x + 10, this.point.y-10);
+            drawingIconRect = new Rect(this.point.x - arrowSizeInPixels, this.point.y - arrowSizeInPixels2, this.point.x + arrowSizeInPixels, this.point.y-arrowSizeInPixels);
         if (this.direction > 45 && this.direction <= 135)
-            drawingIconRect = new Rect(this.point.x + 10, this.point.y - 10, this.point.x + 30, this.point.y+10);
+            drawingIconRect = new Rect(this.point.x + arrowSizeInPixels, this.point.y - arrowSizeInPixels, this.point.x + arrowSizeInPixels2, this.point.y+arrowSizeInPixels);
         if (this.direction > 135 && this.direction <= 225)
-            drawingIconRect = new Rect(this.point.x - 10, this.point.y + 10, this.point.x + 10, this.point.y+30);
+            drawingIconRect = new Rect(this.point.x - arrowSizeInPixels, this.point.y + arrowSizeInPixels, this.point.x + arrowSizeInPixels, this.point.y+arrowSizeInPixels2);
         if (this.direction > 225)
-            drawingIconRect = new Rect(this.point.x - 30, this.point.y - 10, this.point.x - 10, this.point.y + 10);
+            drawingIconRect = new Rect(this.point.x - arrowSizeInPixels2, this.point.y - arrowSizeInPixels, this.point.x - arrowSizeInPixels, this.point.y + arrowSizeInPixels);
 
-        canvas.drawBitmap(rotatedDirectionIcon, new Rect(0, 0, 128, 128), drawingIconRect, null);
+        canvas.drawBitmap(rotatedDirectionIcon, new Rect(0, 0, bitmapSizeInPixels, bitmapSizeInPixels), drawingIconRect, null);
     }
 
 

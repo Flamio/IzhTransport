@@ -1,13 +1,17 @@
 package com.menshikov.maksim.izhtransport.map;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.location.Location;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 
 import com.menshikov.maksim.izhtransport.R;
+import com.menshikov.maksim.izhtransport.ResourceManager;
 
 /**
  * Created by Maksim on 22.07.2016.
@@ -49,8 +53,14 @@ public abstract class MapPoint implements ICloneable
 
     public void draw(Canvas canvas)
     {
-        Rect drawingRect = new Rect(this.point.x - 10, this.point.y - 10, this.point.x + 10, this.point.y + 10);
-        canvas.drawBitmap(this.bitmap, new Rect(0, 0, 128, 128), drawingRect, null);
+        final float sizeTransportIconFromCenterInDp = 7;
+        final float bitmapSizeInDip = 128;
+
+        int sizeTransportIconFromCenterInPixels = (int)this.dipToPixels(ResourceManager.Instance().getResources(), sizeTransportIconFromCenterInDp);
+        int bitmapSizeInPixels = (int)this.dipToPixels(ResourceManager.Instance().getResources(), bitmapSizeInDip);
+
+        Rect drawingRect = new Rect(this.point.x - sizeTransportIconFromCenterInPixels, this.point.y - sizeTransportIconFromCenterInPixels, this.point.x + sizeTransportIconFromCenterInPixels, this.point.y + sizeTransportIconFromCenterInPixels);
+        canvas.drawBitmap(this.bitmap, new Rect(0, 0, bitmapSizeInPixels, bitmapSizeInPixels), drawingRect, null);
     }
 
     abstract public ICloneable clone();
@@ -63,5 +73,10 @@ public abstract class MapPoint implements ICloneable
     public void setId(int id)
     {
         this.id = id;
+    }
+
+    protected static float dipToPixels(Resources res, float dipValue) {
+        DisplayMetrics metrics = res.getDisplayMetrics();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
     }
 }
