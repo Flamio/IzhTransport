@@ -28,14 +28,13 @@ public class MapMoveListener implements IMapMoveListener
         model.setCurrentTop(model.getCurrentTop() + dy);
 
         this.onDrawingMoveablesListener.onNext(false);
-        //this.onStopSubscriber.onNext(model.getMap(false));
     }
 
     @Override
     public void onStopMoving() throws InterruptedException
     {
         this.onDrawingMoveablesListener.onNext(true);
-        this.onStopSubscriber.onNext(model.getMap(false));
+        this.onStopSubscriber.onNext(model.getMap());
     }
 
     @Override

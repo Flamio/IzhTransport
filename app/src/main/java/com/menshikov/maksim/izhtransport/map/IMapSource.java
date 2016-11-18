@@ -14,5 +14,4 @@ public interface IMapSource
 
     Bitmap getMap(Rect rect, int screenWidth, int screenHeight);
 
-    Bitmap getBadMap(Rect rect, int screenWidth, int screenHeight);
 }

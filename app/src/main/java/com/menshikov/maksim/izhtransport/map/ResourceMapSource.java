@@ -74,10 +74,4 @@ public class ResourceMapSource implements IMapSource
         bitmap = decoder.decodeRegion(rect, options);
         return Bitmap.createScaledBitmap(bitmap, screenWidth, screenHeight, false);
     }
-
-    @Override
-    public Bitmap getBadMap(Rect rect, int screenWidth, int screenHeight)
-    {
-        return null;
-    }
 }

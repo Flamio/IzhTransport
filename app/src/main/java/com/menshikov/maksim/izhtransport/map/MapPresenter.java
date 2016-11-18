@@ -1,12 +1,14 @@
 package com.menshikov.maksim.izhtransport.map;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
 import com.menshikov.maksim.izhtransport.ResourceManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import rx.Observable;
@@ -21,7 +23,7 @@ public class MapPresenter
 {
     final private IMapView mapView;
     final MapModel model;
-    private final MapMoveListener mapMoveListener;
+    private final IMapMoveListener mapMoveListener;
     private int width;
     private int height;
     Handler handler = new Handler(Looper.getMainLooper());
@@ -32,16 +34,30 @@ public class MapPresenter
         return this.handler;
     }
 
-    public MapPresenter(final IMapView mapView, int width, int height)
+    public MapPresenter(final IMapView mapView, IMapSource mapSource, int width, int height)
     {
         this.mapView = mapView;
         this.width = width;
         this.height = height;
 
-        model = new MapModel(width, height, new ResourceMapSource(ResourceManager.Instance().getResources()));
+        model = new MapModel(width, height, mapSource);
+
+        MapPoint centerPoint = new MapPoint(null)
+        {
+            @Override
+            public ICloneable clone()
+            {
+                return null;
+            }
+        };
+
+        centerPoint.setXY(new Point(mapSource.getWidth()/2, mapSource.getHeight()/2));
 
         mapMoveListener = new MapMoveListener(model);
-        mapView.setMapMoveListener(mapMoveListener);
+        if (mapView!= null)
+            mapView.setMapMoveListener(mapMoveListener);
+
+        this.moveMapTo(centerPoint);
 
         Observable.create(new Observable.OnSubscribe<Bitmap>()
         {
@@ -109,19 +125,26 @@ public class MapPresenter
         if (point == null)
             return;
 
-        if (point.getGeoLocation() == null)
-            return;
+        if (point.getGeoLocation() != null)
+            CoordHelper.addMapPointCoords(point);
 
-        CoordHelper.addMapPointCoords(point);
         this.model.setCurrentTop(point.getXY().y - height / 2);
         this.model.setCurrentLeft(point.getXY().x - width / 2);
         try
         {
+
             this.mapMoveListener.onStopMoving();
         } catch (InterruptedException e)
         {
             e.printStackTrace();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }catch (NullPointerException e)
+        {
+            e.printStackTrace();
         }
+
     }
 
     public void setMapPoints(ArrayList<MapPoint> mapPoints)

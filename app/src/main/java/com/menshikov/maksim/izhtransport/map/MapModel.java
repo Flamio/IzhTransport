@@ -134,14 +134,8 @@ public class MapModel
         return point.getXY().x >= currentLeft ? point.getXY().y >= currentTop ? point.getXY().x <= currentLeft + currentWidth ? point.getXY().y <= currentTop + currentHeight ? true : false : false : false : false;
     }
 
-    public Bitmap getMap(boolean isBad)
+    public Bitmap getMap()
     {
-        if (isBad)
-        {
-            return mapSource.getBadMap(new Rect(currentLeft, currentTop, currentLeft + currentWidth, currentTop + currentHeight), screenWidth, screenHeight);
-        } else
-        {
-            return mapSource.getMap(new Rect(currentLeft, currentTop, currentLeft + currentWidth, currentTop + currentHeight), screenWidth, screenHeight);
-        }
+        return mapSource.getMap(new Rect(currentLeft, currentTop, currentLeft + currentWidth, currentTop + currentHeight), screenWidth, screenHeight);
     }
 }

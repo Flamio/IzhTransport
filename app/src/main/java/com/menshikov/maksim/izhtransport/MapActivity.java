@@ -15,6 +15,7 @@ import com.menshikov.maksim.izhtransport.map.MapPoint;
 import com.menshikov.maksim.izhtransport.map.MapPresenter;
 import com.menshikov.maksim.izhtransport.map.MapView;
 import com.menshikov.maksim.izhtransport.map.IMapView;
+import com.menshikov.maksim.izhtransport.map.ResourceMapSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class MapActivity extends Activity
 
         final IMapView mapView = (MapView) findViewById(R.id.map_view);
 
-        this.mapPresenter = new MapPresenter(mapView, width, height);
+        this.mapPresenter = new MapPresenter(mapView, new ResourceMapSource(ResourceManager.Instance().getResources()), width, height);
 
         TransportInfoSource transportInfoSource = new TransportInfoSource();
         Intent intent = getIntent();
