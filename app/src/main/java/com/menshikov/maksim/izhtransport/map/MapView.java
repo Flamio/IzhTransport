@@ -178,13 +178,4 @@ public class MapView extends View implements View.OnTouchListener, IMapView
     {
         this.points = points;
     }
-
-    @Override
-    public void clearTransportPoints()
-    {
-        if (points != null)
-        {
-            points.clear();
-        }
-    }
 }

@@ -13,7 +13,6 @@ public class MapMoveListener implements IMapMoveListener
     private MapModel model;
     private Subscriber<? super Bitmap> onStopSubscriber = null;
 
-    private Subscriber<? super Boolean> onDrawingMoveablesListener;
 
     public MapMoveListener(MapModel model)
     {
@@ -27,14 +26,15 @@ public class MapMoveListener implements IMapMoveListener
         model.setCurrentLeft(model.getCurrentLeft() + dx);
         model.setCurrentTop(model.getCurrentTop() + dy);
 
-        this.onDrawingMoveablesListener.onNext(false);
     }
 
     @Override
     public void onStopMoving() throws InterruptedException
     {
-        this.onDrawingMoveablesListener.onNext(true);
-        this.onStopSubscriber.onNext(model.getMap());
+        Bitmap map = model.getMap();
+        if (map == null)
+            return;
+        this.onStopSubscriber.onNext(map);
     }
 
     @Override
@@ -68,11 +68,5 @@ public class MapMoveListener implements IMapMoveListener
     public void setMapSubscriber(Subscriber<? super Bitmap> subscriber)
     {
         this.onStopSubscriber = subscriber;
-    }
-
-    @Override
-    public void setDrawingMoveablesListener(Subscriber<? super Boolean> subscriber)
-    {
-        this.onDrawingMoveablesListener = subscriber;
     }
 }

@@ -16,8 +16,6 @@ public interface IMapView
 
     void setMapPoints(ArrayList<MapPoint> points);
 
-    void clearTransportPoints();
-
     void setXYMap(int x, int y);
 
     Point getXYMap();

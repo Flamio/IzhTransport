@@ -18,6 +18,4 @@ public interface IMapMoveListener
     void onScaling(boolean increase, int centerX, int centerY);
 
     void setMapSubscriber(Subscriber<? super Bitmap> subscriber);
-
-    void setDrawingMoveablesListener(Subscriber<? super Boolean> subscriber);
 }
