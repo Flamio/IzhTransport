@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import rx.Observable;
+import rx.Scheduler;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -27,6 +29,9 @@ public class MapPresenter
     private int width;
     private int height;
     Handler handler = new Handler(Looper.getMainLooper());
+    IMapSource mapSource;
+    Subscription mapListenerSubscription;
+    Scheduler mapListenerSubscribeThread;
 
     public Handler getMainLoopHandler()
     {
@@ -38,32 +43,29 @@ public class MapPresenter
         this.mapView = mapView;
         this.width = width;
         this.height = height;
+        this.mapSource = mapSource;
+        this.mapListenerSubscribeThread = Schedulers.newThread();
 
         model = new MapModel(width, height, mapSource);
 
-        MapPoint centerPoint = new MapPoint(null)
-        {
-            @Override
-            public ICloneable clone()
-            {
-                return null;
-            }
-        };
-
-        centerPoint.setXY(new Point(mapSource.getWidth()/2, mapSource.getHeight()/2));
-
         mapMoveListener = new MapMoveListener(model);
-        if (mapView!= null)
+        if (mapView != null)
             mapView.setMapMoveListener(mapMoveListener);
 
-        Observable.create(new Observable.OnSubscribe<Bitmap>()
+        CreateMapListenerSubscription();
+    }
+
+    private void CreateMapListenerSubscription()
+    {
+        SubscriptionBuilder<Bitmap> builder = new SubscriptionBuilder();
+        this.mapListenerSubscription = builder.Build(new Observable.OnSubscribe<Bitmap>()
         {
             @Override
             public void call(Subscriber<? super Bitmap> subscriber)
             {
                 mapMoveListener.setMapSubscriber(subscriber);
             }
-        }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Bitmap>()
+        }, this.mapListenerSubscribeThread, AndroidSchedulers.mainThread(), new Subscriber<Bitmap>()
         {
             @Override
             public void onCompleted()
@@ -80,15 +82,18 @@ public class MapPresenter
             @Override
             public void onNext(Bitmap bitmap)
             {
-                mapView.setXYMap(0, 0);
-                mapView.setBitmap(bitmap);
-                ArrayList<MapPoint> points = model.getVisiblePoints();
-                mapView.setMapPoints(points);
-                mapView.redraw(true);
+                SetBitmapAndVisiblePointsToMapView(bitmap);
             }
         });
+    }
 
-        this.moveMapTo(centerPoint);
+    private void SetBitmapAndVisiblePointsToMapView(Bitmap bitmap)
+    {
+        mapView.setXYMap(0, 0);
+        mapView.setBitmap(bitmap);
+        ArrayList<MapPoint> points = model.getVisiblePoints();
+        mapView.setMapPoints(points);
+        mapView.redraw(true);
     }
 
     public void moveMapTo(MapPoint point)
@@ -111,7 +116,7 @@ public class MapPresenter
         } catch (IOException e)
         {
             e.printStackTrace();
-        }catch (NullPointerException e)
+        } catch (NullPointerException e)
         {
             e.printStackTrace();
         }
@@ -126,6 +131,22 @@ public class MapPresenter
         ArrayList<MapPoint> points = model.getVisiblePoints();
         mapView.setMapPoints(points);
         this.redraw();
+    }
+
+    public void MoveMapToCenter()
+    {
+        MapPoint centerPoint = new MapPoint(null)
+        {
+            @Override
+            public ICloneable clone()
+            {
+                return null;
+            }
+        };
+
+        centerPoint.setXY(new Point(mapSource.getWidth() / 2, mapSource.getHeight() / 2));
+
+        this.moveMapTo(centerPoint);
     }
 
     private void redraw()

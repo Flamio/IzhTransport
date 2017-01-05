@@ -14,7 +14,13 @@ import com.menshikov.maksim.izhtransport.map.MapPoint;
 import com.menshikov.maksim.izhtransport.map.MapPresenter;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Objects;
+
+import rx.Scheduler;
+import rx.schedulers.Schedulers;
 
 /**
  * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
@@ -75,7 +81,7 @@ public class GraphicMapTest extends ApplicationTestCase<Application>
         }
     };
 
-    private void initialTestEntities()
+    private void initialTestEntities() throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException
     {
         this.mapSource = new IMapSource()
         {
@@ -99,6 +105,9 @@ public class GraphicMapTest extends ApplicationTestCase<Application>
         };
 
         this.mapPresenter = new MapPresenter(this.mapView, this.mapSource, 100, 100);
+        Scheduler subscriptionThread = (Scheduler)this.getField(this.mapPresenter,"mapListenerSubscribeThread");
+        subscriptionThread = Schedulers.io();
+        this.invokeMethod(this.mapPresenter,"CreateMapListenerSubscription");
     }
 
     private Object getField(Object obj, String name) throws NoSuchFieldException, IllegalAccessException
@@ -106,6 +115,13 @@ public class GraphicMapTest extends ApplicationTestCase<Application>
         Field f = obj.getClass().getDeclaredField(name);
         f.setAccessible(true);
         return f.get(obj);
+    }
+
+    private Object invokeMethod(Object obj, String name) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    {
+        Method method = obj.getClass().getDeclaredMethod(name);
+        method.setAccessible(true);
+        return method.invoke(obj);
     }
 
     @Override
@@ -117,6 +133,7 @@ public class GraphicMapTest extends ApplicationTestCase<Application>
 
     public void testInitialRasterPlace() throws NoSuchFieldException, IllegalAccessException, InterruptedException
     {
+        this.mapPresenter.MoveMapToCenter();
         MapModel mapModel = (MapModel) this.getField(this.mapPresenter, "model");
         assertEquals(mapModel.getCurrentLeft(), 450);
         assertEquals(mapModel.getCurrentTop(), 450);

@@ -76,6 +76,7 @@ public class MapActivity extends Activity
         final IMapView mapView = (MapView) findViewById(R.id.map_view);
 
         this.mapPresenter = new MapPresenter(mapView, new ResourceMapSource(ResourceManager.Instance().getResources()), width, height);
+        this.mapPresenter.MoveMapToCenter();
 
         TransportInfoSource transportInfoSource = new TransportInfoSource();
         Intent intent = getIntent();
