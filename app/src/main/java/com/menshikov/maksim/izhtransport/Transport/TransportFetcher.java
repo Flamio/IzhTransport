@@ -55,14 +55,11 @@ public class TransportFetcher implements Observable.OnSubscribe<ArrayList<MapPoi
 
         try
         {
-            ArrayList<MapPoint> mapPoints = transportParser.getTransportPositions();
+            ArrayList<MapPoint> mapPoints = transportParser.getTransportPoints();
             for (MapPoint mapPoint : mapPoints)
                 CoordHelper.addMapPointCoords(mapPoint);
 
             this.subscriber.onNext(mapPoints);
-        } catch (InterruptedException e)
-        {
-            e.printStackTrace();
         } catch (IOException e)
         {
             e.printStackTrace();

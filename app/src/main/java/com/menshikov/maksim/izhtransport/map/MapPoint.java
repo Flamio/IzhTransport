@@ -30,8 +30,6 @@ public abstract class MapPoint implements ICloneable
         this.bitmap = resources;
     }
 
-
-
     public void setXY(Point point)
     {
 

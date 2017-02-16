@@ -26,7 +26,6 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.internal.util.unsafe.MpmcArrayQueue;
 import rx.schedulers.Schedulers;
 
 
@@ -91,8 +90,7 @@ public class MapActivity extends Activity
         {
             this.followingTransportID = savedInstanceState.getInt("FOLLOWING_ITEM_ID");
             this.followingTransport = savedInstanceState.getBoolean("IS_FOLLOWING_ITEM");
-        }
-        catch (NullPointerException ex)
+        } catch (NullPointerException ex)
         {
             this.followingTransportID = 0;
             this.followingTransport = false;
@@ -198,14 +196,11 @@ public class MapActivity extends Activity
     {
         try
         {
-            return this.transportParser.getTransportPositions();
-        } catch (InterruptedException e)
-        {
+            return this.transportParser.getTransportPoints();
         } catch (IOException e)
         {
-            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     private void bindButtons()

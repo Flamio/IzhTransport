@@ -50,6 +50,9 @@ abstract public class MoveableMapPoint extends MapPoint
     {
         super.draw(canvas);
 
+        if (this.direction == -1)
+            return;
+
         final float arrowSizeInDip = 7;
         final float arrowSizeInDip2 = 21;
         final float bitmapSizeInDip = 128;
