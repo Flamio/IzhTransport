@@ -17,16 +17,18 @@ import java.io.InputStream;
 public class ResourceMapSource implements IMapSource
 {
     private Resources resources;
-    private BitmapRegionDecoder decoder;
-    private int mapWidth;
-    private int mapHeight;
+    private static BitmapRegionDecoder decoder = null;
+    private static int mapWidth = 0;
+    private static int mapHeight = 0;
     private Bitmap bitmap;
 
     public ResourceMapSource(Resources resources)
     {
         this.resources = resources;
-        generateDecoder();
-        getMapParameters();
+        if (decoder == null)
+            generateDecoder();
+        if (mapWidth == 0 || mapWidth == 0)
+            getMapParameters();
     }
 
     private void getMapParameters()
