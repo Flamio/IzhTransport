@@ -6,8 +6,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import com.menshikov.maksim.izhtransport.ResourceManager;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -53,6 +51,21 @@ public class MapPresenter
             mapView.setMapMoveListener(mapMoveListener);
 
         CreateMapListenerSubscription();
+        this.StopMapMoving();
+    }
+
+    private void StopMapMoving()
+    {
+        try
+        {
+            this.mapMoveListener.onStopMoving();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        } catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private void CreateMapListenerSubscription()
@@ -106,21 +119,7 @@ public class MapPresenter
 
         this.model.setCurrentTop(point.getXY().y - height / 2);
         this.model.setCurrentLeft(point.getXY().x - width / 2);
-        try
-        {
-
-            this.mapMoveListener.onStopMoving();
-        } catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        } catch (NullPointerException e)
-        {
-            e.printStackTrace();
-        }
-
+        this.StopMapMoving();
     }
 
     public void setMapPoints(ArrayList<MapPoint> mapPoints)
@@ -130,7 +129,7 @@ public class MapPresenter
         model.setMapPoints(mapPoints);
         ArrayList<MapPoint> points = model.getVisiblePoints();
         mapView.setMapPoints(points);
-        this.redraw();
+        this.Redraw();
     }
 
     public void MoveMapToCenter()
@@ -149,7 +148,7 @@ public class MapPresenter
         this.moveMapTo(centerPoint);
     }
 
-    private void redraw()
+    private void Redraw()
     {
         this.handler.post(new Runnable()
         {

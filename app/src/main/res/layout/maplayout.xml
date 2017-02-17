@@ -19,4 +19,14 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginRight="20dp"/>
+
+    <Button
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:id="@+id/next_transport"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/next_transport"/>
+
 </RelativeLayout>

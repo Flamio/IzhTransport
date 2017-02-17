@@ -34,6 +34,12 @@ public class MapActivity extends Activity
     private Subscription subscription;
     private TransportParser transportParser;
     private MapPresenter mapPresenter;
+    private ArrayList<MapPoint> points;
+
+    private static boolean isFirstLoad = true;
+
+
+    private int followingTransportIndex = 0;
 
     @Override
     protected void onResume()
@@ -69,7 +75,9 @@ public class MapActivity extends Activity
         final IMapView mapView = (MapView) findViewById(R.id.map_view);
 
         this.mapPresenter = new MapPresenter(mapView, new ResourceMapSource(ResourceManager.Instance().getResources()), width, height);
-        this.mapPresenter.MoveMapToCenter();
+
+        if (isFirstLoad)
+            this.mapPresenter.MoveMapToCenter();
 
         TransportInfoSource transportInfoSource = new TransportInfoSource();
         Intent intent = getIntent();
@@ -79,14 +87,15 @@ public class MapActivity extends Activity
 
         transportInfoSource.setTransportParameters(transportType, transportNumber);
         this.transportParser = new TransportParser(transportInfoSource);
+
+        isFirstLoad = false;
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outstate)
     {
         super.onSaveInstanceState(outstate);
-        /*outstate.putInt("FOLLOWING_ITEM_ID", this.followingTransportID);
-        outstate.putBoolean("IS_FOLLOWING_ITEM", this.followingTransport);*/
+        //outstate.putBoolean(this.firstLoad, true);
     }
 
     @Override
@@ -104,7 +113,10 @@ public class MapActivity extends Activity
             public Boolean call(ArrayList<MapPoint> mapPoints)
             {
                 if (mapPoints != null)
+                {
+                    points = mapPoints;
                     return true;
+                }
 
                 ShowToast("Не удалось получить данные о транспорте");
                 return false;
@@ -182,5 +194,22 @@ public class MapActivity extends Activity
             }
         });
 
+        Button nextTransportButton = (Button) findViewById(R.id.next_transport);
+        nextTransportButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if (points == null)
+                    return;
+
+                MapPoint point = points.get(followingTransportIndex);
+                mapPresenter.moveMapTo(point);
+
+                followingTransportIndex++;
+                if (followingTransportIndex >= points.size())
+                    followingTransportIndex = 0;
+            }
+        });
     }
 }
