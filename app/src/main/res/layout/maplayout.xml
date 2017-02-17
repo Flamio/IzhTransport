@@ -14,23 +14,6 @@
     <Button
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:id="@+id/next_transport"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/next_transport"/>
-    <Button
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:id="@+id/folow_transport"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="100dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/following_off"
-        />
-    <Button
-        android:layout_width="64dp"
-        android:layout_height="64dp"
         android:id="@+id/select_transport"
         android:background="@drawable/filter"
         android:layout_alignParentRight="true"

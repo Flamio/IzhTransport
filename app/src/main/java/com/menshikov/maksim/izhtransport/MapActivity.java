@@ -34,18 +34,12 @@ public class MapActivity extends Activity
     private Subscription subscription;
     private TransportParser transportParser;
     private MapPresenter mapPresenter;
-    private int followingTransportID = 0;
-    private int followingTransportIndex = 0;
-    private ArrayList<MapPoint> points;
-    private boolean followingTransport = false;
-    private boolean firstLoad;
 
     @Override
     protected void onResume()
     {
         super.onResume();
         this.subscription = this.subscribeTransportObservable(this.getTransportIntervalObservable());
-        firstLoad = true;
         this.subscribeTransportObservable(this.getTransportObservable());
     }
 
@@ -85,24 +79,14 @@ public class MapActivity extends Activity
 
         transportInfoSource.setTransportParameters(transportType, transportNumber);
         this.transportParser = new TransportParser(transportInfoSource);
-
-        try
-        {
-            this.followingTransportID = savedInstanceState.getInt("FOLLOWING_ITEM_ID");
-            this.followingTransport = savedInstanceState.getBoolean("IS_FOLLOWING_ITEM");
-        } catch (NullPointerException ex)
-        {
-            this.followingTransportID = 0;
-            this.followingTransport = false;
-        }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outstate)
     {
         super.onSaveInstanceState(outstate);
-        outstate.putInt("FOLLOWING_ITEM_ID", this.followingTransportID);
-        outstate.putBoolean("IS_FOLLOWING_ITEM", this.followingTransport);
+        /*outstate.putInt("FOLLOWING_ITEM_ID", this.followingTransportID);
+        outstate.putBoolean("IS_FOLLOWING_ITEM", this.followingTransport);*/
     }
 
     @Override
@@ -119,24 +103,11 @@ public class MapActivity extends Activity
             @Override
             public Boolean call(ArrayList<MapPoint> mapPoints)
             {
-                if (mapPoints == null)
-                {
-                    Handler handler = mapPresenter.getMainLoopHandler();
-                    handler.post(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            Toast toast = Toast.makeText(MapActivity.this, "Не удалось получить данные о транспорте", Toast.LENGTH_SHORT);
-                            toast.show();
-                        }
-                    });
-                    return false;
-                }
-                points = mapPoints;
-                if (followingTransportID == 0)
-                    followingTransportID = points.get(0).getId();
-                return true;
+                if (mapPoints != null)
+                    return true;
+
+                ShowToast("Не удалось получить данные о транспорте");
+                return false;
             }
         }).subscribe(new Action1<ArrayList<MapPoint>>()
         {
@@ -144,27 +115,22 @@ public class MapActivity extends Activity
             public void call(ArrayList<MapPoint> mapPoints)
             {
                 mapPresenter.setMapPoints(mapPoints);
-                if (followingTransport || firstLoad)
-                {
-                    MapPoint point = getMapPointById(followingTransportID);
-                    if (point != null)
-                    {
-                        mapPresenter.moveMapTo(point);
-                        firstLoad = false;
-                    }
-                }
             }
         });
     }
 
-    private MapPoint getMapPointById(int id)
+    private void ShowToast(final String message)
     {
-        if (points == null)
-            return null;
-        for (MapPoint point : this.points)
-            if (point.getId() == id)
-                return point;
-        return null;
+        Handler handler = mapPresenter.getMainLoopHandler();
+        handler.post(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                Toast toast = Toast.makeText(MapActivity.this, message, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
     }
 
     private Observable getTransportObservable()
@@ -216,41 +182,5 @@ public class MapActivity extends Activity
             }
         });
 
-        Button nextTransportButton = (Button) findViewById(R.id.next_transport);
-        nextTransportButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                if (points == null)
-                    return;
-                MapPoint point = points.get(followingTransportIndex);
-                followingTransportID = point.getId();
-                mapPresenter.moveMapTo(point);
-
-                followingTransportIndex++;
-                if (followingTransportIndex >= points.size())
-                    followingTransportIndex = 0;
-            }
-        });
-
-        final Button followingButton = (Button) findViewById(R.id.folow_transport);
-        followingButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                followingTransport = !followingTransport;
-                int drawable = boolToReourceIdConverter(followingTransport);
-
-                followingButton.setBackgroundResource(drawable);
-            }
-        });
     }
-
-    private int boolToReourceIdConverter(boolean bool)
-    {
-        return bool ? R.drawable.following_on : R.drawable.following_off;
-    }
-
 }
