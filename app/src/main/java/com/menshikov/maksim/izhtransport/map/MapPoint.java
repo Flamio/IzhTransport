@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.location.Location;
@@ -19,11 +20,12 @@ import com.menshikov.maksim.izhtransport.ResourceManager;
 public abstract class MapPoint implements ICloneable
 {
     private int id;
-
     protected final Bitmap bitmap;
 
     protected Point point;
     protected Location location;
+
+    protected final float sizeTransportIconFromCenterInDp = 7;
 
     public MapPoint(Bitmap resources)
     {
@@ -51,13 +53,11 @@ public abstract class MapPoint implements ICloneable
         return this.location;
     }
 
-    public void draw(Canvas canvas)
-    {
-        final float sizeTransportIconFromCenterInDp = 7;
-        final float bitmapSizeInDip = 128;
+    public void draw(Canvas canvas) {
 
-        int sizeTransportIconFromCenterInPixels = (int)this.dipToPixels(ResourceManager.Instance().getResources(), sizeTransportIconFromCenterInDp);
-        int bitmapSizeInPixels = (int)this.dipToPixels(ResourceManager.Instance().getResources(), bitmapSizeInDip);
+
+        int sizeTransportIconFromCenterInPixels = (int) this.dipToPixels(ResourceManager.Instance().getResources(), sizeTransportIconFromCenterInDp);
+        int bitmapSizeInPixels = (int) this.dipToPixels(ResourceManager.Instance().getResources(), this.bitmap.getHeight());
 
         Rect drawingRect = new Rect(this.point.x - sizeTransportIconFromCenterInPixels, this.point.y - sizeTransportIconFromCenterInPixels, this.point.x + sizeTransportIconFromCenterInPixels, this.point.y + sizeTransportIconFromCenterInPixels);
         canvas.drawBitmap(this.bitmap, new Rect(0, 0, bitmapSizeInPixels, bitmapSizeInPixels), drawingRect, null);

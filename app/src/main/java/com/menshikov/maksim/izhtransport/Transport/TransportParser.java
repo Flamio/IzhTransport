@@ -59,6 +59,8 @@ public class TransportParser
         transportPoint.setGeoLocation(location);
         CoordHelper.addMapPointCoords(transportPoint);
 
+       // transportPoint.setNumber(this.ParseTransportNumber(placemark));
+
         float direction = this.ParseDegreeDirection(placemark);
         transportPoint.setDegreeDirection(direction);
         return transportPoint;
@@ -106,6 +108,17 @@ public class TransportParser
         if (id.isEmpty())
             throw new IOException();
         return Integer.parseInt(id.get(0));
+    }
+
+    private int ParseTransportNumber(String placemark) throws IOException
+    {
+        ArrayList<String> numberString = this.getStringByPattern(placemark, "№\\d{1,}");
+        if (numberString.isEmpty())
+            throw new IOException();
+        ArrayList<String> number = this.getStringByPattern(numberString.get(0), "[0-9]{1,}");
+        if (number.isEmpty())
+            throw new IOException();
+        return Integer.parseInt(number.get(0));
     }
 
 

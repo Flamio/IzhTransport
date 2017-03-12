@@ -53,13 +53,9 @@ abstract public class MoveableMapPoint extends MapPoint
         if (this.direction == -1)
             return;
 
-        final float arrowSizeInDip = 7;
-        final float arrowSizeInDip2 = 21;
-        final float bitmapSizeInDip = 128;
-
-        int arrowSizeInPixels = (int)this.dipToPixels(ResourceManager.Instance().getResources(), arrowSizeInDip);
-        int arrowSizeInPixels2 = (int)this.dipToPixels(ResourceManager.Instance().getResources(), arrowSizeInDip2);
-        int bitmapSizeInPixels = (int)this.dipToPixels(ResourceManager.Instance().getResources(), bitmapSizeInDip);
+        int arrowSizeInPixels = (int)this.dipToPixels(ResourceManager.Instance().getResources(), this.sizeTransportIconFromCenterInDp);
+        int arrowSizeInPixels2 = (int)this.dipToPixels(ResourceManager.Instance().getResources(), this.sizeTransportIconFromCenterInDp * 3);
+        int bitmapSizeInPixels = (int)this.dipToPixels(ResourceManager.Instance().getResources(), this.directionIcon.getHeight());
 
         Bitmap rotatedDirectionIcon = this.rotateBitmap(this.directionIcon, this.direction);
         Rect drawingIconRect = null;
