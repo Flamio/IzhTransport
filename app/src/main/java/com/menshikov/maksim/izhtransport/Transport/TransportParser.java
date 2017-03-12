@@ -5,13 +5,10 @@ import android.location.Location;
 import com.menshikov.maksim.izhtransport.Sources.ITransportInfoSource;
 import com.menshikov.maksim.izhtransport.map.CoordHelper;
 import com.menshikov.maksim.izhtransport.map.MapPoint;
-import com.menshikov.maksim.izhtransport.map.MoveableMapPoint;
+import com.menshikov.maksim.izhtransport.TransportMapPoint;
 
-import java.io.IOError;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,18 +35,18 @@ public class TransportParser
 
         for (String placemark : placemarks)
         {
-            MoveableMapPoint transportPoint = this.BuildTransportPoint(placemark);
+            TransportMapPoint transportPoint = this.BuildTransportPoint(placemark);
             transportPoints.add(transportPoint);
         }
 
         return transportPoints;
     }
 
-    private MoveableMapPoint BuildTransportPoint(String placemark) throws IOException
+    private TransportMapPoint BuildTransportPoint(String placemark) throws IOException
     {
         int transportType = this.ParseTransportType(placemark);
 
-        MoveableMapPoint transportPoint = TransportFactory.createTransportPoint(transportType);
+        TransportMapPoint transportPoint = TransportFactory.CreateTransportPoint(transportType);
 
         int id = this.ParseTransportId(placemark);
         transportPoint.setId(id);
@@ -59,7 +56,7 @@ public class TransportParser
         transportPoint.setGeoLocation(location);
         CoordHelper.addMapPointCoords(transportPoint);
 
-       // transportPoint.setNumber(this.ParseTransportNumber(placemark));
+        transportPoint.SetNumber(this.ParseTransportNumber(placemark));
 
         float direction = this.ParseDegreeDirection(placemark);
         transportPoint.setDegreeDirection(direction);

@@ -134,17 +134,8 @@ public class MapPresenter
 
     public void MoveMapToCenter()
     {
-        MapPoint centerPoint = new MapPoint(null)
-        {
-            @Override
-            public ICloneable clone()
-            {
-                return null;
-            }
-        };
-
+        MapPoint centerPoint = new MapPoint(null);
         centerPoint.setXY(new Point(mapSource.getWidth() / 2, mapSource.getHeight() / 2));
-
         this.moveMapTo(centerPoint);
     }
 

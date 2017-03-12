@@ -5,8 +5,7 @@ import android.graphics.BitmapFactory;
 
 import com.menshikov.maksim.izhtransport.R;
 import com.menshikov.maksim.izhtransport.ResourceManager;
-import com.menshikov.maksim.izhtransport.map.MapPoint;
-import com.menshikov.maksim.izhtransport.map.MoveableMapPoint;
+import com.menshikov.maksim.izhtransport.TransportMapPoint;
 
 import java.io.IOException;
 
@@ -20,16 +19,16 @@ public class TransportFactory
     public static Bitmap tramIcon =  BitmapFactory.decodeResource(ResourceManager.Instance().getResources(), R.drawable.tram);
     public static Bitmap directionIcon =  BitmapFactory.decodeResource(ResourceManager.Instance().getResources(), R.drawable.arrow);
 
-    public static MoveableMapPoint createTransportPoint(int id) throws IOException
+    public static TransportMapPoint CreateTransportPoint(int id) throws IOException
     {
         switch (id)
         {
             case 1:
-                return new BusMapPoint(busIcon,directionIcon);
+                return new TransportMapPoint(busIcon, directionIcon);
             case 2:
-                return new TrolleyMapPoint(trolleyIcon,directionIcon);
+                return new TransportMapPoint(trolleyIcon,directionIcon);
             case 4:
-                return new TramMapPoint(tramIcon,directionIcon);
+                return new TransportMapPoint(tramIcon,directionIcon);
             default:
                 throw new IOException();
         }

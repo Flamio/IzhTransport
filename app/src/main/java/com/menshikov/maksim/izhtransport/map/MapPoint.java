@@ -10,14 +10,12 @@ import android.graphics.Rect;
 import android.location.Location;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-
-import com.menshikov.maksim.izhtransport.R;
 import com.menshikov.maksim.izhtransport.ResourceManager;
 
 /**
  * Created by Maksim on 22.07.2016.
  */
-public abstract class MapPoint implements ICloneable
+public class MapPoint
 {
     private int id;
     protected final Bitmap bitmap;
@@ -63,7 +61,16 @@ public abstract class MapPoint implements ICloneable
         canvas.drawBitmap(this.bitmap, new Rect(0, 0, bitmapSizeInPixels, bitmapSizeInPixels), drawingRect, null);
     }
 
-    abstract public ICloneable clone();
+    public MapPoint Clone()
+    {
+        MapPoint clonePoint = new MapPoint(this.bitmap);
+        clonePoint.setXY(new Point(this.getXY()));
+        Location cloneLocation = new Location("izh");
+        cloneLocation.setLatitude(this.getGeoLocation().getLatitude());
+        cloneLocation.setLongitude(this.getGeoLocation().getLongitude());
+        clonePoint.setGeoLocation(cloneLocation);
+        return clonePoint;
+    }
 
     public int getId()
     {

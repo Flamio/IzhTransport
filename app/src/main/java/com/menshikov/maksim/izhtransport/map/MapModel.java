@@ -45,7 +45,7 @@ public class MapModel
 
         for (MapPoint mapPoint : this.points)
         {
-            MapPoint pointClone = (MapPoint) mapPoint.clone();
+            MapPoint pointClone = mapPoint.Clone();
             if (!this.convertPointToScreenCoord(pointClone))
                 continue;
             visiblePoints.add(pointClone);
